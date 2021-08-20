@@ -1,0 +1,108 @@
+---- Minecraft Crash Report ----
+// Why did you do that?
+
+Time: 7/19/21 9:04 PM
+Description: Unexpected error
+
+java.lang.NullPointerException: Unexpected error
+	at me.luma.client.hud.Hud.lambda$2(Hud.java:36)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(Unknown Source)
+	at java.util.ArrayList.forEach(Unknown Source)
+	at java.util.stream.SortedOps$RefSortingSink.end(Unknown Source)
+	at java.util.stream.Sink$ChainedReference.end(Unknown Source)
+	at java.util.stream.AbstractPipeline.copyInto(Unknown Source)
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(Unknown Source)
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(Unknown Source)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(Unknown Source)
+	at java.util.stream.AbstractPipeline.evaluate(Unknown Source)
+	at java.util.stream.ReferencePipeline.forEach(Unknown Source)
+	at me.luma.client.hud.Hud.ArrayList(Hud.java:35)
+	at net.minecraft.client.gui.GuiIngame.renderGameOverlay(GuiIngame.java:169)
+	at net.minecraft.client.renderer.EntityRenderer.func_181560_a(EntityRenderer.java:1351)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1130)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:423)
+	at net.minecraft.client.main.Main.main(Main.java:113)
+	at Start.main(Start.java:11)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at me.luma.client.hud.Hud.lambda$2(Hud.java:36)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(Unknown Source)
+	at java.util.ArrayList.forEach(Unknown Source)
+	at java.util.stream.SortedOps$RefSortingSink.end(Unknown Source)
+	at java.util.stream.Sink$ChainedReference.end(Unknown Source)
+	at java.util.stream.AbstractPipeline.copyInto(Unknown Source)
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(Unknown Source)
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(Unknown Source)
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(Unknown Source)
+	at java.util.stream.AbstractPipeline.evaluate(Unknown Source)
+	at java.util.stream.ReferencePipeline.forEach(Unknown Source)
+	at me.luma.client.hud.Hud.ArrayList(Hud.java:35)
+	at net.minecraft.client.gui.GuiIngame.renderGameOverlay(GuiIngame.java:169)
+
+-- Affected level --
+Details:
+	Level name: MpServer
+	All players: 1 total; [EntityPlayerSP['Player106'/222, l='MpServer', x=635.52, y=67.07, z=233.71]]
+	Chunk stats: MultiplayerChunkCache: 240, 240
+	Level seed: 0
+	Level generator: ID 02 - largeBiomes, ver 0. Features enabled: false
+	Level generator options: 
+	Level spawn location: 584.00,64.00,166.00 - World: (584,64,166), Chunk: (at 8,4,6 in 36,10; contains blocks 576,0,160 to 591,255,175), Region: (1,0; contains chunks 32,0 to 63,31, blocks 512,0,0 to 1023,255,511)
+	Level time: 121274 game time, 120654 day time
+	Level dimension: 0
+	Level storage version: 0x00000 - Unknown?
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: survival (ID 0). Hardcore: false. Cheats: false
+	Forced entities: 62 total; [EntitySquid['Squid'/128, l='MpServer', x=685.06, y=52.79, z=173.33], EntityBat['Bat'/130, l='MpServer', x=672.25, y=15.09, z=206.25], EntitySquid['Squid'/131, l='MpServer', x=683.40, y=56.28, z=221.89], EntitySquid['Squid'/132, l='MpServer', x=683.25, y=57.97, z=220.67], EntitySquid['Squid'/133, l='MpServer', x=683.59, y=58.13, z=216.41], EntitySquid['Squid'/134, l='MpServer', x=678.13, y=52.82, z=218.19], EntitySquid['Squid'/135, l='MpServer', x=675.93, y=51.09, z=233.54], EntitySquid['Squid'/136, l='MpServer', x=679.97, y=51.36, z=237.37], EntitySquid['Squid'/137, l='MpServer', x=681.22, y=49.00, z=224.25], EntitySquid['Squid'/138, l='MpServer', x=677.19, y=61.47, z=238.15], EntitySquid['Squid'/139, l='MpServer', x=678.90, y=60.53, z=244.16], EntitySquid['Squid'/140, l='MpServer', x=679.08, y=62.00, z=251.42], EntitySquid['Squid'/141, l='MpServer', x=685.15, y=60.62, z=249.53], EntityZombie['Zombie'/142, l='MpServer', x=684.19, y=13.00, z=268.84], EntitySquid['Squid'/144, l='MpServer', x=693.44, y=56.15, z=190.63], EntitySquid['Squid'/145, l='MpServer', x=698.96, y=57.71, z=193.47], EntitySquid['Squid'/146, l='MpServer', x=689.12, y=62.08, z=204.79], EntityMinecartChest['container.minecart'/147, l='MpServer', x=697.53, y=18.00, z=237.50], EntityCreeper['Creeper'/148, l='MpServer', x=695.19, y=11.00, z=286.47], EntityBat['Bat'/149, l='MpServer', x=696.06, y=12.31, z=285.66], EntityZombie['Zombie'/150, l='MpServer', x=700.09, y=13.00, z=289.47], EntitySkeleton['Skeleton'/151, l='MpServer', x=700.50, y=16.00, z=293.50], EntitySkeleton['Skeleton'/152, l='MpServer', x=701.63, y=16.00, z=291.50], EntityCreeper['Creeper'/153, l='MpServer', x=693.50, y=30.00, z=310.50], EntityCreeper['Creeper'/154, l='MpServer', x=694.50, y=30.00, z=315.50], EntityCreeper['Creeper'/155, l='MpServer', x=693.50, y=30.00, z=313.50], EntityZombie['Zombie'/164, l='MpServer', x=705.69, y=16.00, z=295.47], EntitySkeleton['Skeleton'/165, l='MpServer', x=705.69, y=16.00, z=294.59], EntityCreeper['Creeper'/56, l='MpServer', x=573.50, y=36.00, z=298.50], EntitySpider['Spider'/57, l='MpServer', x=573.00, y=36.00, z=313.66], EntityBat['Bat'/60, l='MpServer', x=595.94, y=27.14, z=191.23], EntityZombie['Zombie'/61, l='MpServer', x=579.50, y=43.00, z=199.50], EntityZombie['Zombie'/62, l='MpServer', x=581.84, y=36.00, z=301.78], EntityBat['Bat'/66, l='MpServer', x=602.44, y=35.09, z=182.59], EntityBat['Bat'/67, l='MpServer', x=601.86, y=29.28, z=201.33], EntitySkeleton['Skeleton'/79, l='MpServer', x=621.50, y=20.00, z=232.50], EntitySpider['Spider'/80, l='MpServer', x=618.47, y=64.00, z=225.09], EntityWitch['Witch'/81, l='MpServer', x=619.16, y=65.00, z=251.97], EntityBat['Bat'/83, l='MpServer', x=639.09, y=35.63, z=173.97], EntityBat['Bat'/84, l='MpServer', x=634.22, y=35.34, z=175.06], EntityZombie['Zombie'/85, l='MpServer', x=637.72, y=14.00, z=196.72], EntityCreeper['Creeper'/86, l='MpServer', x=635.50, y=24.00, z=193.50], EntitySkeleton['Skeleton'/87, l='MpServer', x=630.26, y=16.00, z=216.83], EntityBat['Bat'/88, l='MpServer', x=633.30, y=21.39, z=214.64], EntityItem['item.item.arrow'/89, l='MpServer', x=638.31, y=64.00, z=258.63], EntityItem['item.item.bone'/90, l='MpServer', x=638.19, y=64.00, z=259.38], EntityCreeper['Creeper'/91, l='MpServer', x=631.98, y=15.00, z=282.19], EntitySpider['Spider'/92, l='MpServer', x=631.69, y=68.00, z=278.72], EntityBat['Bat'/93, l='MpServer', x=638.53, y=24.10, z=298.75], EntityPlayerSP['Player106'/222, l='MpServer', x=635.52, y=67.07, z=233.71], EntityCreeper['Creeper'/95, l='MpServer', x=637.50, y=31.00, z=305.50], EntitySkeleton['Skeleton'/96, l='MpServer', x=639.50, y=35.00, z=309.50], EntityBat['Bat'/103, l='MpServer', x=644.06, y=35.88, z=172.00], EntityItem['item.item.bone'/104, l='MpServer', x=642.47, y=66.00, z=251.28], EntitySpider['Spider'/105, l='MpServer', x=642.44, y=64.00, z=257.25], EntityCreeper['Creeper'/106, l='MpServer', x=640.50, y=31.00, z=300.50], EntityCreeper['Creeper'/107, l='MpServer', x=641.50, y=31.00, z=301.50], EntitySkeleton['Skeleton'/108, l='MpServer', x=641.69, y=35.00, z=306.28], EntitySkeleton['Skeleton'/120, l='MpServer', x=661.50, y=24.00, z=197.50], EntitySquid['Squid'/121, l='MpServer', x=671.57, y=60.30, z=213.40], EntitySquid['Squid'/122, l='MpServer', x=672.10, y=56.00, z=220.38], EntitySquid['Squid'/127, l='MpServer', x=687.31, y=53.33, z=175.34]]
+	Retry entities: 0 total; []
+	Server brand: vanilla
+	Server type: Integrated singleplayer server
+Stacktrace:
+	at net.minecraft.client.multiplayer.WorldClient.addWorldInfoToCrashReport(WorldClient.java:403)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2750)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:452)
+	at net.minecraft.client.main.Main.main(Main.java:113)
+	at Start.main(Start.java:11)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.8.8
+	Operating System: Windows 10 (amd64) version 10.0
+	CPU: 12x AMD Ryzen 5 3600X 6-Core Processor 
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 628570808 bytes (599 MB) / 1037959168 bytes (989 MB) up to 1037959168 bytes (989 MB)
+	JVM Flags: 3 total; -Xincgc -Xmx1024M -Xms1024M
+	IntCache: cache: 0, tcache: 0, allocated: 13, tallocated: 99
+	Launched Version: mcp
+	LWJGL: 2.9.4
+	OpenGL: NVIDIA GeForce RTX 2080 SUPER/PCIe/SSE2 GL version 4.6.0 NVIDIA 471.11, NVIDIA Corporation
+	GL Caps: Using GL 1.3 multitexturing.
+Using GL 1.3 texture combiners.
+Using framebuffer objects because OpenGL 3.0 is supported and separate blending is supported.
+Shaders are available because OpenGL 2.1 is supported.
+VBOs are available because OpenGL 1.5 is supported.
+
+	Using VBOs: No
+	Is Modded: Very likely; Jar signature invalidated
+	Type: Client (map_client.txt)
+	Resource Packs: Bisou [32x].zip
+	Current Language: English (US)
+	Profiler Position: N/A (disabled)
+	CPU: 12x AMD Ryzen 5 3600X 6-Core Processor 
+	OptiFine Version: OptiFine_1.8.8_HD_U_I7
+	Render Distance Chunks: 8
+	Mipmaps: 4
+	Anisotropic Filtering: 1
+	Antialiasing: 0
+	Multitexture: false
+	Shaders: null
+	OpenGlVersion: 4.6.0 NVIDIA 471.11
+	OpenGlRenderer: NVIDIA GeForce RTX 2080 SUPER/PCIe/SSE2
+	OpenGlVendor: NVIDIA Corporation
+	CpuCount: 12

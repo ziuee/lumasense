@@ -1,0 +1,27 @@
+package me.luma.client.management.module.impl.render;
+
+import java.util.ArrayList;
+
+import me.luma.client.management.gui.clickgui.settings.SettingBoolean;
+import me.luma.client.management.module.Category;
+import me.luma.client.management.module.Module;
+import net.minecraft.entity.EntityLivingBase;
+
+public class DamageParticles extends Module {
+	
+	private ArrayList<hit> hits = new ArrayList<hit>();
+    private float lastHealth;
+    private EntityLivingBase lastTarget = null;
+
+    SettingBoolean particleHue;
+    SettingBoolean rainbowParticles;
+    
+	public DamageParticles() {
+		super("DamageParticles", 0, Category.RENDER);
+		
+		particleHue = new SettingBoolean("Particle Hue", this, true);
+		particleHue = new SettingBoolean("Rainbow Particles", this, true);
+	}
+	
+
+}

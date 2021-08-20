@@ -1,0 +1,8 @@
+-------------- TODO --------------
+- License System
+- Cosmetics | Rory | Not Finished
+- Notifications | Rory | Finished (AutoPlay remaining)
+- HUD Modules | Rory | Finished
+- AltManager | ziue | Not Finished
+- Music | ziue | Not Finished
+- Freelook | Rory | Not Finished

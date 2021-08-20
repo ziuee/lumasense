@@ -1,0 +1,13 @@
+package me.luma.client;
+
+public class Luma {
+	
+	
+	public static String clientName = "Luma" + " 1.8";
+	public static String clientDev = "ziue" + " & " + "Cabb0003";
+	public static String version = "1.0.0";
+	public static String build = "1";
+	
+	public static Luma instance = new Luma();
+	
+}

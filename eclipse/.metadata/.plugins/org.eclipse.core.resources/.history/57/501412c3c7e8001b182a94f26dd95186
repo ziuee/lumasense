@@ -1,0 +1,92 @@
+package me.luma.client.hud;
+
+import java.awt.Color;
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import me.luma.client.ClientLoader;
+import me.luma.client.Luma;
+import me.luma.client.management.module.Module;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiIngame;
+import net.minecraft.client.gui.ScaledResolution;
+
+public class Hud extends GuiIngame {
+
+	public static FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+	
+	public Hud(Minecraft mcIn) {
+		super(mcIn);
+	}
+	
+	public static void ArrayList() {
+		final ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+		final int[] yDist = {2};
+		final int[] counter = {1};
+		int count = 0;
+		AtomicInteger arrayoffset = new AtomicInteger(3);
+		
+		for(Module m: ClientLoader.loaderInstance.moduleManager.getModules()) {
+			m.isToggled();
+			if(m.isToggled()) {
+				count++;
+			}
+		}
+		ClientLoader.loaderInstance.moduleManager.getModules().stream().filter(Module::isToggled).sorted(Comparator.comparingInt(module -> -font.getStringWidth(module.getDisplayName()))).forEach(module -> {
+			ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 3.5 -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 0.5, -1);
+			yDist[0] += ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getHeight(module.getDisplayName()) + 2;
+			arrayoffset.addAndGet(font.FONT_HEIGHT + 2);
+			counter[0]++;
+		});
+	}
+	
+	public static void clientInfo() { //GuiIngame
+		ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+		drawRainbowRect(3, 2, 75, 2, 2);
+		Gui.drawRect(30, 74, 25, 2, -1);
+		ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawStringWithShadow(Luma.clientName, 3, 3, -1);
+	}
+	
+	public static long renderRainbowRect(int left, int top, int right, int bottom, double time, long difference, long delay, RainbowDirection rainbowDirection) {
+        int i;
+        long endDelay = 0L;
+        if(rainbowDirection == RainbowDirection.RIGHT) {
+            for (i = 0; i < right - left; i++)
+                Gui.drawRect(left + i, top, right, bottom, getRainbow(endDelay = delay + i * -difference, time).getRGB()); 
+        }
+        if(rainbowDirection == RainbowDirection.LEFT) {
+            for (i = 0; i < right - left; i++)
+                Gui.drawRect(left + i, top, right, bottom, getRainbow(endDelay = delay + i * -difference, time).getRGB()); 
+        }
+        if(rainbowDirection == null) {
+            for (i = 0; i < bottom - top; i++)
+                Gui.drawRect(left, top + i, right, bottom, getRainbow(endDelay = delay + i * -difference, time).getRGB()); 
+        }
+        if(rainbowDirection == RainbowDirection.UP) {
+            for (i = 0; i < bottom - top; i++)
+                Gui.drawRect(left, top + i, right, bottom, getRainbow(endDelay = delay + i * -difference, time).getRGB()); 
+        }
+        return endDelay;
+    }
+	
+	public static Color getRainbow(long delay, double time) {
+        double rainbowState = Math.ceil((System.currentTimeMillis() * time + delay) / 20.0D);
+        rainbowState %= 360.0D;
+        return Color.getHSBColor((float)(rainbowState / 360.0D), 1.0F, 1.0F);
+    }
+    public enum RainbowDirection {
+        LEFT, UP, RIGHT, DOWN;
+    }
+    
+    public static long drawRainbowRect(int left, int top, int right, int bottom, int size) {
+        int size2 = 1;
+        long topCol = renderRainbowRect(left, top - size2, right, top, 2.0D, 10L, 0L, RainbowDirection.RIGHT);
+        long downCol = renderRainbowRect(left - size2, top - size, left, bottom + size2, 2.0D, 10L, 0L, RainbowDirection.DOWN);
+        renderRainbowRect(right, top - size2, right + size2, bottom + size2, 2.0D, 10L, topCol, RainbowDirection.DOWN);
+        renderRainbowRect(left, bottom, right, bottom + size2, 2.0D, 10L, downCol, RainbowDirection.RIGHT);
+        return topCol;
+    }
+
+}

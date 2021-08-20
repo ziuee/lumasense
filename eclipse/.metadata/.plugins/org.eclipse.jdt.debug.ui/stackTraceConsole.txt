@@ -1,0 +1,3 @@
+ if (!this.timerMotion.hasTimeElapsed((long)(Zore.instance.settingsManager.getSettingByName("SDelay").getValDouble() + Math.random() * 4.0D), true) && this.isNotCollidingBelow(0.01D) && !mc.gameSettings.keyBindJump.isKeyDown()) {
+                            return;
+                        }

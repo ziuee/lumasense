@@ -1,0 +1,247 @@
+package me.luma.client.management.module.impl.combat;
+
+import org.lwjgl.input.Keyboard;
+
+import io.netty.util.internal.ThreadLocalRandom;
+import me.luma.client.ClientLoader;
+import me.luma.client.management.event.EventManager;
+import me.luma.client.management.event.EventTarget;
+import me.luma.client.management.event.impl.EventPreMotionUpdate;
+import me.luma.client.management.event.impl.EventSendPacket;
+import me.luma.client.management.gui.clickgui.settings.SettingBoolean;
+import me.luma.client.management.gui.clickgui.settings.SettingSlider;
+import me.luma.client.management.module.Category;
+import me.luma.client.management.module.Module;
+import me.luma.client.management.utils.TimeHelper;
+import me.luma.client.management.utils.Vec;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemSword;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+
+public class KillAura extends Module {
+	
+	public static EntityLivingBase entityAttacked;
+	public boolean fakeEntityAttacked;
+	private TimeHelper timeHelper = new TimeHelper();
+	
+	SettingBoolean autoblock;
+	SettingBoolean predict;
+	SettingBoolean aimlock;
+	SettingBoolean rotations;
+	SettingBoolean Invisibles;
+	SettingBoolean Players;
+	SettingBoolean Animals;
+	SettingBoolean Monsters;
+	SettingBoolean Villagers;
+	//SettingBoolean Teams;
+	SettingBoolean AfterDeath;
+	
+	public static SettingSlider reach;
+	SettingSlider delay;
+	SettingSlider minSpeed;
+	SettingSlider maxSpeed;
+	
+	public KillAura() {
+		super("KillAura", Keyboard.KEY_R, Category.COMBAT);
+		minSpeed = new SettingSlider("Min Speed", this, 90.0, 0, 180.0, false, true);
+		maxSpeed = new SettingSlider("Max Speed", this, 180.0, 0, 180.0, false, true);
+		reach = new SettingSlider("Reach", this, 4, 3, 6, false, true);
+		delay = new SettingSlider("Delay", this, 10, 1, 20, false, true);
+		
+		autoblock = new SettingBoolean("Auto Block", this, true);
+		rotations = new SettingBoolean("Rotations", this, true);
+		aimlock = new SettingBoolean("Aim Lock", this, false);
+		predict = new SettingBoolean("Predict", this, true);
+		Invisibles = new SettingBoolean("Invisibles", this, true);
+		Players = new SettingBoolean("Players", this, true);
+		Animals = new SettingBoolean("Animals", this, true);
+		Monsters = new SettingBoolean("Monsters", this, true);
+		Villagers = new SettingBoolean("Villagers", this, true);
+		//Teams = new SettingBoolean("Teams", this, true);
+		AfterDeath = new SettingBoolean("AfterDeath", this, true);
+	}
+	
+	@EventTarget
+	public void onTick(EventPreMotionUpdate event) {
+		for (Object o : mc.theWorld.loadedEntityList) {
+			if (o instanceof EntityLivingBase) {
+				if (o != mc.thePlayer) {
+					EntityLivingBase e = (EntityLivingBase) o;
+					
+					boolean block = check(e) && autoblock.getBooleanValue() && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword;
+					
+					if(block && e.getDistanceToEntity(mc.thePlayer) < reach.getSliderValue()) {
+						mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
+                        //KeyBinding.setKeyBindState(blockKey, false);
+						//mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), mc.thePlayer.getPosition(), EnumFacing.DOWN, new Vec3(0.5, 0.5, 0.5));
+						//this.mc.thePlayer.setItemInUse(this.mc.thePlayer.getHeldItem(), this.mc.thePlayer.getHeldItem().getMaxItemUseDuration());
+					}
+					
+
+					if (check(e) && (timeHelper.isDelayComplete((float) (1000 / delay.getSliderValue())))) {
+						attack(e);
+						entityAttacked = e;	
+					}
+				}
+			}
+		}
+		if(entityAttacked == null) {
+			return;
+		}
+		final float[] rotationsCurrent = new float[] { ClientLoader.loaderInstance.ROTATION_UTIL.serverYaw, ClientLoader.loaderInstance.ROTATION_UTIL.serverPitch };
+		final float[] rotationsInstant = ClientLoader.loaderInstance.ROTATION_UTIL.getRotations(entityAttacked, predict.getBooleanValue(), 1);
+		final float[] rotationsSmooth = ClientLoader.loaderInstance.ROTATION_UTIL.smoothRotation(rotationsCurrent, rotationsInstant, calculateRotationSpeed() + (int) (ThreadLocalRandom.current().nextInt(5)));
+		
+			float yaw = rotationsInstant[0];
+			float pitch = rotationsInstant[1];
+			if (aimlock.getBooleanValue()) {
+				mc.thePlayer.rotationYaw = yaw;
+				mc.thePlayer.rotationPitch = pitch;
+			}
+		this.fakeEntityAttacked = true;
+	}
+	
+	private boolean check(EntityLivingBase e) {
+		if (e.isInvisible())
+			if(Invisibles.getBooleanValue()) {
+				return true;
+			} else {
+				return false;
+			}
+		if (e instanceof EntityPlayer)
+			if(Players.getBooleanValue()) {
+				return true;
+			} else {
+				return false;
+			}
+		if (e instanceof EntityAnimal)
+			if(Animals.getBooleanValue()) {
+				return true;
+			} else {
+				return false;
+			}
+		if (e instanceof EntityMob)
+			if(Monsters.getBooleanValue()) {
+				return true;
+			} else {
+				return false;
+			}
+		if (e instanceof EntityVillager)
+			if(Villagers.getBooleanValue()) {
+				return true;
+			} else {
+				return false;
+			}
+		if (e.getHealth() <= 0)
+			if(AfterDeath.getBooleanValue()) {
+				return true;
+			} else {
+				return false;
+			}
+		return true;
+	}
+	
+	private void attack(EntityLivingBase e) {
+		if (e.getDistanceToEntity(mc.thePlayer) <= 100) {
+			if (fakeEntityAttacked) {
+				mc.thePlayer.swingItem();
+				mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(e, C02PacketUseEntity.Action.ATTACK));
+				timeHelper.setLastMS();
+				mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0F, 0.0F, 0.0F));
+				//this.unblock();
+			}
+			entityAttacked = null;
+			fakeEntityAttacked = false;
+		}
+	}
+	
+	@EventTarget
+	public void onSendPacket(EventSendPacket event) {
+		Packet packet = event.getPacket();
+		if(rotations.getBooleanValue()) {
+			if(entityAttacked == null) {
+				return;
+			}
+			if(mc.thePlayer == null) {
+				return;
+			}
+			if(entityAttacked.getDistanceToEntity(mc.thePlayer) <= reach.getSliderValue()) {
+				final float[] rotationsCurrent = new float[] { ClientLoader.loaderInstance.ROTATION_UTIL.serverYaw, ClientLoader.loaderInstance.ROTATION_UTIL.serverPitch };
+				final float[] rotationsInstant = ClientLoader.loaderInstance.ROTATION_UTIL.getRotations(entityAttacked, predict.getBooleanValue(), 1);
+				final float[] rotationsSmooth = ClientLoader.loaderInstance.ROTATION_UTIL.smoothRotation(rotationsCurrent, rotationsInstant, calculateRotationSpeed() + (int) (ThreadLocalRandom.current().nextInt(5)));
+				
+				if(packet instanceof C03PacketPlayer) {
+					
+					float yaw = rotationsInstant[0];
+					float pitch = rotationsInstant[1];
+					if (!aimlock.getBooleanValue()) {
+						mc.thePlayer.rotationYaw = yaw;
+						mc.thePlayer.rotationPitch = pitch;
+						C03PacketPlayer.yaw = yaw;
+						C03PacketPlayer.pitch = pitch;
+						mc.thePlayer.rotationYawHead = yaw;
+						mc.thePlayer.renderYawOffset = yaw;
+					}/* else {
+						mc.thePlayer.rotationYaw = yaw;
+						mc.thePlayer.rotationPitch = pitch;
+					}*/
+						/*final float yaw = rotationsSmooth[0];
+						final float pitch = rotationsSmooth[1];
+						ClientLoader.loaderInstance.ROTATION_UTIL.setRotations(yaw, pitch);
+						if (!aimlock.getBooleanValue()) {
+							ClientLoader.loaderInstance.ROTATION_UTIL.setRotations(yaw, pitch);
+							event.setRotation(yaw, pitch);
+						} else {
+							ClientLoader.loaderInstance.ROTATION_UTIL.setRotations(yaw, pitch);
+							mc.thePlayer.setRotations(yaw, pitch);
+						}
+	
+						mc.thePlayer.setHeadRotations(yaw, pitch);
+						mc.thePlayer.renderYawOffset = yaw;
+	
+						if (entityAttacked == null) {
+							return;
+						}
+	
+						mc.thePlayer.setHeadRotations(yaw, pitch);*/
+				}
+			}
+		}
+	}
+	
+	private float calculateRotationSpeed() {
+		if (minSpeed.getSliderValue() == maxSpeed.getSliderValue()) {
+			return 180;
+		}
+		return (float) ThreadLocalRandom.current().nextDouble(minSpeed.getSliderValue(), maxSpeed.getSliderValue());
+	}
+	
+	public void onEnable(){
+		super.onEnable();
+		EventManager.register(this);
+		timeHelper.reset();
+	}
+	
+	public void onDisable(){
+		super.onDisable();
+		EventManager.unregister(this);
+		entityAttacked = null;
+		fakeEntityAttacked = false;
+		timeHelper.reset();
+	}
+}

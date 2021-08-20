@@ -1,0 +1,46 @@
+package me.luma.client;
+
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import org.lwjgl.opengl.Display;
+
+import me.luma.client.management.event.EventManager;
+import me.luma.client.management.event.EventTarget;
+import me.luma.client.management.event.impl.EventKey;
+import me.luma.client.management.font.FontManager;
+import me.luma.client.management.module.Module;
+import me.luma.client.management.module.ModuleManager;
+import me.luma.client.management.utils.Render2D;
+
+public class ClientLoader {
+	
+	public static ClientLoader loaderInstance = new ClientLoader();
+	public static final Render2D RENDER2D = new Render2D();
+	public static ModuleManager moduleManager;
+	public static EventManager eventManager;
+	public static FontManager fontManager;
+	
+	public void startLuma() {
+		
+		/*
+		 * Initialize Client 
+		 */
+		
+		moduleManager = new ModuleManager();
+		eventManager = new EventManager();
+		fontManager = new FontManager();
+		
+		Display.setTitle("Luma | 1.8.8");
+		eventManager.register(this);
+	}
+	
+	public void shutdownLuma() {
+		eventManager.unregister(this);
+	}
+	
+	@EventTarget
+    public void onKey(EventKey event) {
+        moduleManager.getModules().stream().filter(module -> module.getKey() == event.getKey()).forEach(module -> module.toggle());
+    }
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item key="selection" value="Collided"/>
+		<item key="wrap" value="true"/>
+		<item key="casesensitive" value="false"/>
+		<item key="wholeword" value="false"/>
+		<item key="incremental" value="false"/>
+		<item key="isRegEx" value="false"/>
+		<list key="findhistory">
+			<item value="Collided"/>
+			<item value="draw"/>
+			<item value="mc.fontRendererObj.drawCenteredString"/>
+			<item value="MainMenu"/>
+			<item value="30"/>
+			<item value="38"/>
+			<item value="getMc()"/>
+			<item value="renderingTarget"/>
+			<item value="Client"/>
+			<item value="Event3D"/>
+			<item value="gradient"/>
+			<item value="Client.DELTA_UTIL"/>
+			<item value=".playerInfoMap.values();"/>
+			<item value="getWorldTime"/>
+			<item value="setTime"/>
+		</list>
+		<list key="replacehistory">
+			<item value="ClientLoader.loaderInstance.fontManager.getFont(&quot;SFL 10&quot;).drawCenteredString"/>
+			<item value="35"/>
+			<item value="43"/>
+			<item value="mc"/>
+			<item value="entityAttacked"/>
+			<item value="ClientLoader.loaderInstance"/>
+			<item value="ClientLoader.loaderInstance.DELTA_UTIL"/>
+			<item value="smooth.getBooleanValue()"/>
+			<item value=""/>
+			<item value="mc.theWorld"/>
+			<item value="mc.thePlayer"/>
+			<item value="place"/>
+			<item value="place(playerBlock U Do It XD"/>
+			<item value="place(playerBlock"/>
+			<item value="KillAura.entityAttacked"/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="1322"/>
+		<item key="DIALOG_Y_ORIGIN" value="325"/>
+		<item key="DIALOG_WIDTH" value="284"/>
+		<item key="DIALOG_HEIGHT" value="391"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+</section>

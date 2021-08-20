@@ -1,0 +1,143 @@
+package me.luma.client.management.gui.mainmenu.login;
+
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+
+import org.lwjgl.input.Keyboard;
+
+import me.luma.client.core.registry.impl.ClientLoader;
+import me.luma.client.management.gui.mainmenu.MainMenu;
+import me.luma.client.management.utils.Draw;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ResourceLocation;
+
+public final class GuiAltLogin extends GuiScreen {
+    private PasswordField password;
+    private final GuiScreen previousScreen;
+    private AltLoginThread thread;
+    private GuiTextField username;
+
+    public GuiAltLogin(GuiScreen previousScreen) {
+        this.previousScreen = previousScreen;
+    }
+
+    @Override
+    protected void actionPerformed(GuiButton button) {
+    	String data;
+        switch (button.id) {
+            case 1: {
+                this.mc.displayGuiScreen(this.previousScreen);
+                break;
+            }
+            case 0: {
+                this.thread = new AltLoginThread(this.username.getText(), this.password.getText());
+                this.thread.start();
+            }
+            
+            case 2: {
+                data = null;
+                try {
+                    data = (String)Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                    if (data.contains(":")) {
+                        String[] credentials = data.split(":");
+                        this.username.setText(credentials[0]);
+                        this.password.setText(credentials[1]);
+                    }
+                } catch (UnsupportedFlavorException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void drawScreen(int x2, int y2, float z2) {
+        //this.drawDefaultBackground();
+    	Draw.instance.drawImg(new ResourceLocation("luma/mainmenu/birdbg.jpeg"), 0.0, 0.0, width, height);
+        //this.drawCenteredString(this.mc.fontRendererObj, "UserName: " + mc.getSession().getUsername(), width / 2, 135, -1);
+        this.username.drawTextBox();
+        this.password.drawTextBox();
+        Gui.drawRect(360, 120, width / 2 + 120, height / 2 + 50, 0x45000000);
+        MainMenu.drawString(2, "Alt Login", width / 20 + 172, 70, -1);
+        //this.drawCenteredString(this.mc.fontRendererObj, "Alt Login", width / 2, 150, -1);
+        ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawCenteredString(this.thread == null ? (Object)((Object)EnumChatFormatting.GRAY) + "Login..." : this.thread.getStatus(), width / 2, height / 2 - 100, -1);
+        if (this.username.getText().isEmpty()) {
+        	ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString("Enter Email", width / 2 - 97, 186, 0xff999999);
+        }
+        if (this.password.getText().isEmpty()) {
+        	ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString("Enter Password", width / 2 - 97, 211, 0xff999999);
+        }
+        super.drawScreen(x2, y2, z2);
+    }
+
+    @Override
+    public void initGui() {
+    	ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Alt Manager");
+        int var3 = height / 4 + 24;
+        /* Buttons */
+        this.buttonList.add(new GuiButton(0, width / 2 - 100, var3 + 72 + 12, "Login", false, true));
+        this.buttonList.add(new GuiButton(1, width / 2 - 100, var3 + 72 + 12 + 24, "Back"));
+        this.buttonList.add(new GuiButton(2, width / 2 + 3, var3 + 72 + 12, "Import user:pass", false, true));
+        
+        /* Text Boxes */
+        this.username = new GuiTextField(var3, this.mc.fontRendererObj, width / 2 - 100, 180, 200, 20);
+        this.password = new PasswordField(this.mc.fontRendererObj, width / 2 - 100, 205, 200, 20);
+        this.username.setFocused(true);
+        Keyboard.enableRepeatEvents(true);
+    }
+
+    @Override
+    protected void keyTyped(char character, int key) {
+        try {
+            super.keyTyped(character, key);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (character == '\t') {
+            if (!this.username.isFocused() && !this.password.isFocused()) {
+                this.username.setFocused(true);
+            } else {
+                this.username.setFocused(this.password.isFocused());
+                this.password.setFocused(!this.username.isFocused());
+            }
+        }
+        if (character == '\r') {
+            this.actionPerformed((GuiButton)this.buttonList.get(0));
+        }
+        this.username.textboxKeyTyped(character, key);
+        this.password.textboxKeyTyped(character, key);
+    }
+
+    @Override
+    protected void mouseClicked(int x2, int y2, int button) {
+        try {
+            super.mouseClicked(x2, y2, button);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.username.mouseClicked(x2, y2, button);
+        this.password.mouseClicked(x2, y2, button);
+    }
+
+    @Override
+    public void onGuiClosed() {
+        Keyboard.enableRepeatEvents(false);
+    }
+
+    @Override
+    public void updateScreen() {
+        this.username.updateCursorCounter();
+        this.password.updateCursorCounter();
+    }
+}

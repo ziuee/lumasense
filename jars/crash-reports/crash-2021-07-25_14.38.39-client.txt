@@ -1,0 +1,114 @@
+---- Minecraft Crash Report ----
+// Why did you do that?
+
+Time: 7/25/21 2:38 PM
+Description: Updating screen events
+
+java.lang.NullPointerException: Updating screen events
+	at net.minecraft.src.ConnectedParser.parseValue(ConnectedParser.java:435)
+	at net.minecraft.src.ConnectedParser.parsePropertyValue(ConnectedParser.java:396)
+	at net.minecraft.src.ConnectedParser.parseBlockMetadatas(ConnectedParser.java:313)
+	at net.minecraft.src.ConnectedParser.parseMatchBlock(ConnectedParser.java:158)
+	at net.minecraft.src.ConnectedParser.parseMatchBlocks(ConnectedParser.java:73)
+	at shadersmod.client.BlockAliases.loadBlockAliases(BlockAliases.java:152)
+	at shadersmod.client.BlockAliases.update(BlockAliases.java:86)
+	at shadersmod.client.Shaders.loadShaderPackProperties(Shaders.java:853)
+	at shadersmod.client.Shaders.loadShaderPack(Shaders.java:788)
+	at shadersmod.client.Shaders.setShaderPack(Shaders.java:695)
+	at shadersmod.client.GuiSlotShaders.elementClicked(GuiSlotShaders.java:67)
+	at net.minecraft.client.gui.GuiSlot.handleMouseInput(GuiSlot.java:329)
+	at shadersmod.client.GuiShaders.handleMouseInput(GuiShaders.java:95)
+	at net.minecraft.client.gui.GuiScreen.handleInput(GuiScreen.java:568)
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1778)
+	at net.minecraft.client.Minecraft.runGameLoop(Minecraft.java:1105)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:424)
+	at net.minecraft.client.main.Main.main(Main.java:113)
+	at Start.main(Start.java:11)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at net.minecraft.src.ConnectedParser.parseValue(ConnectedParser.java:435)
+	at net.minecraft.src.ConnectedParser.parsePropertyValue(ConnectedParser.java:396)
+	at net.minecraft.src.ConnectedParser.parseBlockMetadatas(ConnectedParser.java:313)
+	at net.minecraft.src.ConnectedParser.parseMatchBlock(ConnectedParser.java:158)
+	at net.minecraft.src.ConnectedParser.parseMatchBlocks(ConnectedParser.java:73)
+	at shadersmod.client.BlockAliases.loadBlockAliases(BlockAliases.java:152)
+	at shadersmod.client.BlockAliases.update(BlockAliases.java:86)
+	at shadersmod.client.Shaders.loadShaderPackProperties(Shaders.java:853)
+	at shadersmod.client.Shaders.loadShaderPack(Shaders.java:788)
+	at shadersmod.client.Shaders.setShaderPack(Shaders.java:695)
+	at shadersmod.client.GuiSlotShaders.elementClicked(GuiSlotShaders.java:67)
+	at net.minecraft.client.gui.GuiSlot.handleMouseInput(GuiSlot.java:329)
+	at shadersmod.client.GuiShaders.handleMouseInput(GuiShaders.java:95)
+	at net.minecraft.client.gui.GuiScreen.handleInput(GuiScreen.java:568)
+
+-- Affected screen --
+Details:
+	Screen name: shadersmod.client.GuiShaders
+
+-- Affected level --
+Details:
+	Level name: MpServer
+	All players: 9 total; [EntityPlayerSP['ziue'/1168546, l='MpServer', x=139.43, y=64.00, z=3.70], EntityOtherPlayerMP['Gapdandan'/898513, l='MpServer', x=140.78, y=65.00, z=6.34], EntityOtherPlayerMP['DragonRod'/1164456, l='MpServer', x=140.47, y=62.00, z=-7.47], EntityOtherPlayerMP['§6KillAura Test'/37420, l='MpServer', x=156.59, y=66.00, z=28.53], EntityOtherPlayerMP['§btoy wildcard'/37403, l='MpServer', x=139.91, y=57.50, z=-22.00], EntityOtherPlayerMP['§btoy lockdown'/37452, l='MpServer', x=177.50, y=56.50, z=11.66], EntityOtherPlayerMP['§btoy starboy'/37450, l='MpServer', x=158.28, y=51.00, z=-39.84], EntityOtherPlayerMP['ongeoorloofd'/1144238, l='MpServer', x=140.97, y=65.00, z=8.00], EntityOtherPlayerMP['LegHunterXD'/1090310, l='MpServer', x=139.38, y=64.00, z=-1.47]]
+	Chunk stats: MultiplayerChunkCache: 440, 440
+	Level seed: 0
+	Level generator: ID 00 - default, ver 1. Features enabled: false
+	Level generator options: 
+	Level spawn location: 268.00,64.00,225.00 - World: (268,64,225), Chunk: (at 12,4,1 in 16,14; contains blocks 256,0,224 to 271,255,239), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,0,0 to 511,255,511)
+	Level time: 157102012 game time, 157148371 day time
+	Level dimension: 0
+	Level storage version: 0x00000 - Unknown?
+	Level weather: Rain time: 0 (now: false), thunder time: 0 (now: false)
+	Level game mode: Game mode: survival (ID 0). Hardcore: false. Cheats: false
+	Forced entities: 31 total; [EntityOtherPlayerMP['connorcchristie'/1146072, l='MpServer', x=138.09, y=65.59, z=6.73], EntityOtherPlayerMP['NoName13022010'/1196638, l='MpServer', x=141.91, y=65.00, z=10.19], EntityOtherPlayerMP['§btoy starboy'/37450, l='MpServer', x=158.28, y=51.00, z=-39.84], EntityArmorStand['§b§oWelcome to Nova HvH'/1209499, l='MpServer', x=140.53, y=65.38, z=-0.50], EntityOtherPlayerMP['§btoy starboy'/37450, l='MpServer', x=158.28, y=51.00, z=-39.84], EntityOtherPlayerMP['§btoy lockdown'/37452, l='MpServer', x=177.50, y=56.50, z=11.66], EntityOtherPlayerMP['LegHunterXD'/1090310, l='MpServer', x=139.38, y=64.00, z=-1.47], EntityArmorStand['§fCheating is encouraged'/1209500, l='MpServer', x=140.53, y=65.13, z=-0.50], EntityOtherPlayerMP['LegHunterXD'/1090310, l='MpServer', x=139.38, y=64.00, z=-1.47], EntityOtherPlayerMP['§btoy wildcard'/37403, l='MpServer', x=139.91, y=57.50, z=-22.00], EntityOtherPlayerMP['Gapdandan'/898513, l='MpServer', x=140.78, y=65.00, z=6.34], EntityOtherPlayerMP['polaczek3126'/557886, l='MpServer', x=137.54, y=58.85, z=52.63], EntityOtherPlayerMP['connorcchristie'/1146072, l='MpServer', x=142.06, y=64.91, z=17.88], EntityPlayerSP['ziue'/1168546, l='MpServer', x=139.43, y=64.00, z=3.70], EntityOtherPlayerMP['Cool_AJT8'/921953, l='MpServer', x=154.46, y=66.00, z=26.28], EntityOtherPlayerMP['§6KillAura Test'/37420, l='MpServer', x=156.59, y=66.00, z=28.53], EntityOtherPlayerMP['redmatter74'/1202874, l='MpServer', x=151.34, y=64.56, z=20.44], EntityOtherPlayerMP['yunglady'/1087143, l='MpServer', x=143.94, y=65.00, z=10.69], EntityOtherPlayerMP['LegHunterXD'/1090310, l='MpServer', x=128.13, y=66.00, z=1.16], EntityOtherPlayerMP['Gapdandan'/898513, l='MpServer', x=140.78, y=65.00, z=6.34], EntityOtherPlayerMP['Hypixelxx_'/1150459, l='MpServer', x=176.19, y=55.00, z=16.28], EntityOtherPlayerMP['§6KillAura Test'/37420, l='MpServer', x=156.59, y=66.00, z=28.53], EntityOtherPlayerMP['DragonRod'/1164456, l='MpServer', x=140.47, y=62.00, z=-7.47], EntityOtherPlayerMP['Mojech'/1166235, l='MpServer', x=133.13, y=64.50, z=10.97], EntityOtherPlayerMP['§btoy wildcard'/37403, l='MpServer', x=139.91, y=57.50, z=-22.00], EntityOtherPlayerMP['ongeoorloofd'/1144238, l='MpServer', x=126.06, y=61.00, z=-15.06], EntityOtherPlayerMP['DragonRod'/1164456, l='MpServer', x=140.47, y=62.00, z=-7.47], EntityOtherPlayerMP['§btoy lockdown'/37452, l='MpServer', x=177.50, y=56.50, z=11.66], EntityOtherPlayerMP['ongeoorloofd'/1144238, l='MpServer', x=140.97, y=65.00, z=8.00], EntityOtherPlayerMP['itsrainyokay'/900758, l='MpServer', x=138.91, y=59.50, z=40.41], EntityOtherPlayerMP['ongeoorloofd'/1144238, l='MpServer', x=140.97, y=65.00, z=8.00]]
+	Retry entities: 0 total; []
+	Server brand: PaperSpigot
+	Server type: Non-integrated multiplayer server
+Stacktrace:
+	at net.minecraft.client.multiplayer.WorldClient.addWorldInfoToCrashReport(WorldClient.java:403)
+	at net.minecraft.client.Minecraft.addGraphicsAndWorldToCrashReport(Minecraft.java:2753)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:445)
+	at net.minecraft.client.main.Main.main(Main.java:113)
+	at Start.main(Start.java:11)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.8.8
+	Operating System: Windows 10 (amd64) version 10.0
+	CPU: 12x AMD Ryzen 5 3600X 6-Core Processor 
+	Java Version: 1.8.0_231, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode), Oracle Corporation
+	Memory: 727634616 bytes (693 MB) / 1037959168 bytes (989 MB) up to 1037959168 bytes (989 MB)
+	JVM Flags: 3 total; -Xincgc -Xmx1024M -Xms1024M
+	IntCache: cache: 0, tcache: 0, allocated: 13, tallocated: 95
+	Launched Version: mcp
+	LWJGL: 2.9.4
+	OpenGL: NVIDIA GeForce RTX 2080 SUPER/PCIe/SSE2 GL version 4.6.0 NVIDIA 471.11, NVIDIA Corporation
+	GL Caps: Using GL 1.3 multitexturing.
+Using GL 1.3 texture combiners.
+Using framebuffer objects because OpenGL 3.0 is supported and separate blending is supported.
+Shaders are available because OpenGL 2.1 is supported.
+VBOs are available because OpenGL 1.5 is supported.
+
+	Using VBOs: No
+	Is Modded: Very likely; Jar signature invalidated
+	Type: Client (map_client.txt)
+	Resource Packs: Bisou [32x].zip
+	Current Language: English (US)
+	Profiler Position: N/A (disabled)
+	CPU: 12x AMD Ryzen 5 3600X 6-Core Processor 
+	OptiFine Version: OptiFine_1.8.8_HD_U_I7
+	Render Distance Chunks: 12
+	Mipmaps: 4
+	Anisotropic Filtering: 1
+	Antialiasing: 0
+	Multitexture: false
+	Shaders: Sildurs Vibrant Shaders v1.283 High-MB.zip
+	OpenGlVersion: 4.6.0 NVIDIA 471.11
+	OpenGlRenderer: NVIDIA GeForce RTX 2080 SUPER/PCIe/SSE2
+	OpenGlVendor: NVIDIA Corporation
+	CpuCount: 12

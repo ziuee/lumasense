@@ -1,0 +1,482 @@
+package me.luma.client.management.module.impl.movement;
+
+import java.util.ArrayList;
+
+import javax.swing.plaf.basic.BasicBorders.ToggleButtonBorder;
+
+import org.lwjgl.input.Keyboard;
+
+import me.luma.client.core.registry.impl.ClientLoader;
+import me.luma.client.management.event.EventTarget;
+import me.luma.client.management.event.impl.EventMove;
+import me.luma.client.management.event.impl.EventReceivePacket;
+import me.luma.client.management.event.impl.EventSendPacket;
+import me.luma.client.management.event.impl.EventUpdate;
+import me.luma.client.management.gui.clickgui.settings.SettingArrayList;
+import me.luma.client.management.gui.clickgui.settings.SettingBoolean;
+import me.luma.client.management.gui.clickgui.settings.SettingSlider;
+import me.luma.client.management.module.Category;
+import me.luma.client.management.module.Module;
+import me.luma.client.management.module.impl.combat.TargetStrafe;
+import me.luma.client.management.utils.MathUtils;
+import me.luma.client.management.utils.MoveUtils;
+import me.luma.client.management.utils.Stopwatch;
+import me.luma.client.management.utils.TimerTEst;
+import me.luma.client.management.utils.TimerUtil;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.network.Packet;
+import net.minecraft.network.handshake.client.C00Handshake;
+import net.minecraft.network.login.client.C00PacketLoginStart;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.server.S32PacketConfirmTransaction;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.Timer;
+import net.minecraft.util.Vec3;
+
+public class Fly extends Module {
+	
+	public static ArrayList<Packet> packetListZ = new ArrayList<Packet>();
+	
+	TimerTEst timerUtil = new TimerTEst();
+	TimerUtil timerUtilVerus = new TimerUtil();
+	private final Stopwatch stopwatch = new Stopwatch();
+    public double positionOffset, speedMult, stageTwoMult, startOffset, jumpModifier, damageOffset, damageY, damageYTwo, yDown;
+    private int ticks;
+    private Vec3 lastPos;
+    private boolean tp;
+	private int stage;
+	private double moveSpeed;
+	private double lastDist;
+	private static double yPos;
+	private static boolean damaged;
+	private boolean boosted;
+	private boolean hypixelboost;
+    private boolean decreasing2;
+    private boolean canboost;
+    private float timervalue;
+    private int delay = 0;
+    int level;
+    
+    SettingBoolean Damage;
+    SettingBoolean blink;
+    SettingBoolean flyMultiplier;
+    SettingSlider multiplytime;
+    SettingSlider multiplyspeed;
+    SettingSlider speed;
+    SettingArrayList FlyMode;
+    
+	public Fly() {
+		super("Fly", Keyboard.KEY_F, Category.MOVEMENT);
+		
+		ArrayList<String> flymodeS = new ArrayList<String>();
+		flymodeS.add("Verus");
+		flymodeS.add("Hypixel");
+		FlyMode = new SettingArrayList("Fly Mode", this, flymodeS, "Verus");
+		
+		//multiplyspeed = new SettingSlider("Multiplier Speed", this, 4, 3, 5, true, false);
+		//multiplytime = new SettingSlider("Multiplier Time", this, 100.0D, 50.0D, 3000.0D, true, false);
+		
+		//flyMultiplier = new SettingBoolean("Multiplier", this, true);
+		Damage = new SettingBoolean("Damage", this, true);
+		blink = new SettingBoolean("Blink", this, true);
+		
+	}
+	
+	@EventTarget
+	public void onUpdate(EventUpdate event) {
+		if(FlyMode.getArraListValue().equalsIgnoreCase("Verus")) {
+			mc.thePlayer.fallDistance = 0.0f;
+			mc.thePlayer.motionX = 0.0;
+	        mc.thePlayer.motionY = 0.0;
+	        mc.thePlayer.motionZ = 0.0;
+	        mc.thePlayer.posY += 1.1;
+	        mc.thePlayer.posY -= 0.1;
+			if (MoveUtils.isMoving()) {
+				if (mc.thePlayer.ticksExisted % 5 == 0) {
+					mc.thePlayer.motionY = 0;
+					mc.timer.timerSpeed = 0.2F;
+					MoveUtils.doStrafe(9);
+				} else {
+					mc.thePlayer.motionY = -.1;
+					mc.timer.timerSpeed = 0.2F;
+					MoveUtils.doStrafe(3.0);
+				}
+			} else {
+				stop(true);
+				mc.timer.timerSpeed = 0.2F;
+			}
+		}
+		
+		if(FlyMode.getArraListValue().equalsIgnoreCase("Hypixel")) {
+			mc.thePlayer.fallDistance = 0.0f; //Verus Values
+	        mc.thePlayer.motionX = 0.0;
+	        mc.thePlayer.motionY = 0.0;
+	        mc.thePlayer.motionZ = 0.0;
+	        mc.thePlayer.posY += 0.1;
+	        mc.thePlayer.posY -= 0.1;
+			//mc.timer.timerSpeed = 0.25f;
+			if (mc.gameSettings.keyBindJump.isKeyDown()) {
+				mc.thePlayer.motionY = 0.4;
+	        }
+	        if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+	            mc.thePlayer.motionY = -0.4;
+	        }
+	        mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+	        mc.thePlayer.stepHeight = 0f;
+	        mc.thePlayer.cameraYaw = 0.00f;
+	        if(boosted && timerUtil.hasElapsed(200)) {
+	        	mc.thePlayer.cameraYaw = 0.06f;
+	        } else {
+	        	mc.thePlayer.cameraYaw = 0.00f;
+	        }
+	        mc.thePlayer.onGround = true;
+	        if (packetListZ.size() >= 250) {
+	            //sendPackets();
+	        }
+	        if (mc.thePlayer.hurtTime > 3)
+	            damaged = true;
+	        mc.thePlayer.motionY = 0.0;
+	        
+	        if (!this.boosted) {
+                Timer.timerSpeed = 1f;
+                this.boosted = true;
+            } else if (this.timerUtil.hasElapsed(1500)) {
+                Timer.timerSpeed = 1f;
+                MoveUtils.setMotion(null, 0.0);
+            }
+            final double xDist = mc.thePlayer.posX - mc.thePlayer.prevPosX;
+            final double zDist = mc.thePlayer.posZ - mc.thePlayer.prevPosZ;
+            this.lastDist = Math.sqrt(xDist * xDist + zDist * zDist);
+            if (this.canboost && this.hypixelboost) {
+                this.timervalue += (float) (this.decreasing2 ? -0.01 : 0.05);
+                if (this.timervalue >= 1.4) {
+                    this.decreasing2 = true;
+                }
+                if (this.timervalue <= 0.9) {
+                    this.decreasing2 = false;
+                }
+                if (this.timerUtil.hasElapsed(2000)) {
+                    this.canboost = false;
+                    mc.thePlayer.cameraYaw = 0.105f;
+                }
+            }
+	        
+			/*mc.thePlayer.fallDistance = 0.0f;
+	        mc.thePlayer.motionX = 0.0;
+	        mc.thePlayer.motionY = 0.0;
+	        mc.thePlayer.motionZ = 0.0;
+	        mc.thePlayer.posY += 0.1;
+	        mc.thePlayer.posY -= 0.1;
+	        mc.timer.timerSpeed = 0.25F;
+	        if(flyMultiplier.getBooleanValue() && !mc.gameSettings.keyBindJump.isKeyDown()) {
+	        	if (!timerUtil.hasElapsed(multiplytime.getSliderValue().longValue())) {
+	        		setSpeed(multiplyspeed.getSliderValue());
+	        		 //mc.timer.timerSpeed = 0.30F;
+	        	} else {
+	        		 //mc.timer.timerSpeed = 0.25F;
+                    setSpeed(1.8);
+	        	}
+		        /*if (!timerUtil.elapsed((long) 500L)) {
+		        	setSpeed(multiplyspeed.getSliderValue());
+		        	ClientLoader.addChatMessage("1");
+		        } else {
+		        	ClientLoader.addChatMessage("default");
+		        	setSpeed(1.8);
+		        }*/
+	        /*} else {
+	        	setSpeed(1.8);
+	        }
+	        if (mc.gameSettings.keyBindJump.isKeyDown()) {
+	            EntityPlayerSP player = mc.thePlayer;
+	            mc.thePlayer.motionY += 1.0;
+	        }
+	        if (mc.gameSettings.keyBindSneak.isKeyDown()) {
+	            mc.thePlayer.motionY -= 1.0;
+	        }*/
+		}
+	}
+	
+	public final void stop(boolean y) {
+    	mc.thePlayer.motionX = 0;
+    	mc.thePlayer.motionZ = 0;
+    	if (y) mc.thePlayer.motionY = 0;
+    }
+	
+	@EventTarget
+	public void onMove(EventMove e) {
+		if(FlyMode.getArraListValue().equalsIgnoreCase("Hypixel")) {
+			final float yaw = mc.thePlayer.rotationYaw;
+	        double strafe = MovementInput.moveStrafe;
+	        double forward = MovementInput.moveForward;
+	        final double mx = -Math.sin(Math.toRadians(yaw));
+	        final double mz = Math.cos(Math.toRadians(yaw));
+	        
+	        if (forward == 0.0 && strafe == 0.0) {
+	            e.setX(0.0);
+	            e.setZ(0.0);
+	        }
+	        if (forward != 0.0 && strafe != 0.0) {
+	            forward *= Math.sin(0.7853981633974483);
+	            strafe *= Math.cos(0.7853981633974483);
+	        }
+	        if (this.level != 1 || (mc.thePlayer.moveForward == 0.0f && mc.thePlayer.moveStrafing == 0.0f)) {
+	            if (this.level == 2) {
+	                this.level = 3;
+	                this.moveSpeed *= 2.0499999;
+	            } else if (this.level == 3) {
+	                this.level = 4;
+	                double difference;
+	                if (MoveUtils.getSpeedEffect() > 0) {
+	                    difference = 1.1 - 0.7
+	                            * (this.lastDist - MathUtils.getBaseMovementSpeed());
+	                } else {
+	                    difference = 1.0 - 0.7
+	                            * (this.lastDist - MathUtils.getBaseMovementSpeed());
+	                }
+	                this.moveSpeed = this.lastDist - difference;
+	            } else {
+	                if (mc.theWorld
+	                        .getCollidingBoundingBoxes(mc.thePlayer,
+	                                mc.thePlayer.getEntityBoundingBox().offset(0.0, mc.thePlayer.motionY, 0.0))
+	                        .size() > 0 || mc.thePlayer.isCollidedVertically) {
+	                    this.level = 1;
+	                }
+	                this.moveSpeed = this.lastDist - this.lastDist / 159.99999;
+	            }
+	        } else {
+	            this.level = 2;
+	            final double boost = mc.thePlayer.isPotionActive(Potion.moveSpeed) ? 1.706 : 2.034;
+	            this.moveSpeed = boost * MathUtils.getBaseMovementSpeed() - 0.01;
+	        }
+	        this.moveSpeed = Math.max(this.moveSpeed, MathUtils.getBaseMovementSpeed());
+	        e.setX(forward * this.moveSpeed * mx + strafe * this.moveSpeed * mz);
+	        e.setZ(forward * this.moveSpeed * mz - strafe * this.moveSpeed * mx);
+	        if (forward == 0.0 && strafe == 0.0) {
+	            e.setX(0.0);
+	            e.setZ(0.0);
+	        }
+	        if (this.timerUtil.hasElapsed(1700) && this.hypixelboost) {
+	            this.hypixelboost = false;
+	        }
+	        if (TargetStrafe.canStrafe()) {
+	        	TargetStrafe.strafe(e, Math.max(MoveUtils.getBaseSpeed(), this.moveSpeed));
+	        }
+		}
+	}
+	
+	public static double getJumpBoostModifier(double baseJumpHeight) {
+	      if (mc.thePlayer.isPotionActive(Potion.jump)) {
+	         int amplifier = mc.thePlayer.getActivePotionEffect(Potion.jump).getAmplifier();
+	         baseJumpHeight += (double)((float)(amplifier + 1) * 0.1F);
+	      }
+
+	      return baseJumpHeight;
+	   }
+	
+	public static double getBaseMoveSpeed() {
+	      double baseSpeed = 0.2875D;
+	      if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+	         baseSpeed *= 1.0D + 0.2D * (double)(mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1);
+	      }
+
+	      return baseSpeed;
+	   }
+	
+	
+	@EventTarget
+	public void onSendPacket(EventSendPacket event) {
+		Packet packet = event.getPacket();
+		if(blink.getBooleanValue()) {
+			 if (event.getPacket() instanceof C00PacketKeepAlive || event.getPacket() instanceof C00Handshake || event.getPacket() instanceof C00PacketLoginStart) {
+                 return;
+             }
+             packetListZ.add(event.getPacket());
+             event.setCancelled(true);
+		} 
+	}
+	
+	@EventTarget
+	public void onReceivePacket(EventReceivePacket event) {
+		Packet packet = event.getPacket();
+		if(blink.getBooleanValue()) {
+			if (packet instanceof C03PacketPlayer) {
+				packetListZ.add(packet);
+	            event.setCancelled(true);
+	            System.out.println("Packet Received Got Cancelled");
+	        }
+		}
+	}
+	
+	public static void sendPackets() {
+		yPos += 1E-10;
+			try {
+				for (int i = 0; i < packetListZ.size(); i++) {
+					Packet packet = packetListZ.get(i);
+					if (packet != null) {
+
+						mc.thePlayer.sendQueue.addToSendQueueNoEvent(packet);
+						
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			packetListZ.clear();
+			mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + yPos, mc.thePlayer.posZ);
+		}
+	
+	public static void setSpeed(EventMove moveEvent, double moveSpeed) {
+	      setSpeed(moveEvent, moveSpeed, mc.thePlayer.rotationYaw, (double)mc.thePlayer.movementInput.moveStrafe, (double)mc.thePlayer.movementInput.moveForward);
+	   }
+	
+	public static void setSpeed(EventMove moveEvent, double moveSpeed, float pseudoYaw, double pseudoStrafe, double pseudoForward) {
+	      double forward = pseudoForward;
+	      double strafe = pseudoStrafe;
+	      float yaw = pseudoYaw;
+	      if (pseudoForward != 0.0D) {
+	         if (pseudoStrafe > 0.0D) {
+	            yaw = pseudoYaw + (float)(pseudoForward > 0.0D ? -45 : 45);
+	         } else if (pseudoStrafe < 0.0D) {
+	            yaw = pseudoYaw + (float)(pseudoForward > 0.0D ? 45 : -45);
+	         }
+
+	         strafe = 0.0D;
+	         if (pseudoForward > 0.0D) {
+	            forward = 1.0D;
+	         } else if (pseudoForward < 0.0D) {
+	            forward = -1.0D;
+	         }
+	      }
+
+	      if (strafe > 0.0D) {
+	         strafe = 1.0D;
+	      } else if (strafe < 0.0D) {
+	         strafe = -1.0D;
+	      }
+
+	      double mx = Math.cos(Math.toRadians((double)(yaw + 90.0F)));
+	      double mz = Math.sin(Math.toRadians((double)(yaw + 90.0F)));
+	      moveEvent.x = forward * moveSpeed * mx + strafe * moveSpeed * mz;
+	      moveEvent.z = forward * moveSpeed * mz - strafe * moveSpeed * mx;
+	   }
+	
+	@Override
+	public void onEnable() {
+		super.onEnable();
+		this.tp = false;
+		this.damaged = false;
+		timerUtil.reset();
+		timerUtilVerus.reset();
+		if(Damage.getBooleanValue()) {
+			
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+                    mc.thePlayer.posY + 3.0001, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+                    mc.thePlayer.posY, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+                    mc.thePlayer.posY, mc.thePlayer.posZ, true)); // donated by tear#9999
+			
+			/*if (!damaged) {
+				Timer.timerSpeed = 1f;
+				this.damagePlayer();
+			}*/
+			
+			/*if(mc.thePlayer.onGround) {
+				double fallDistance = 3.0125; //add 0.0125 to ensure we get the fall dmg
+		        while (fallDistance > 0) {
+		            mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
+		            mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0625, mc.thePlayer.posZ, false));
+		            mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0624986421, mc.thePlayer.posZ, false));
+		            mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
+		            fallDistance -= 0.0624986421;
+		        }
+		        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
+				/*mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
+		        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.18D, mc.thePlayer.posZ, true));
+		        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.08D, mc.thePlayer.posZ, true));
+				NetHandlerPlayClient netHandler = mc.getNetHandler();
+			    final double offset = 0.4122222218322211111111F;
+			    final EntityPlayerSP player = mc.thePlayer;
+			    final double x = player.posX;
+			    final double y = player.posY;
+			    final double z = player.posZ;
+			     
+			    /*for (int i = 0; i < 9; i++) {
+			        netHandler.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(x, y + offset, z, false));
+			        netHandler.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.000002737272, z, false));
+			        netHandler.addToSendQueue(new C03PacketPlayer(false));
+			    }
+			    netHandler.addToSendQueue(new C03PacketPlayer(true));*/
+			//}
+		}
+		
+		if (mc.thePlayer == null) {
+            return;
+        }
+	}
+	
+	@Override
+	public void onDisable() {
+		super.onDisable();
+		this.damaged = false;
+		if(blink.getBooleanValue()) {
+			for(final Packet packet : packetListZ){
+    			mc.getNetHandler().addToSendQueue(packet);
+    		}
+    		packetListZ.clear();
+		}
+		timerUtil.reset();
+		timerUtilVerus.reset();
+		setSpeed(0);
+		mc.thePlayer.capabilities.isFlying = false;
+		mc.timer.timerSpeed = 1F;
+	}
+	
+	public static void setSpeed(double speed) {
+        double forward = MovementInput.moveForward;
+        double strafe = MovementInput.moveStrafe;
+        float yaw = mc.thePlayer.rotationYaw;
+        if (forward == 0.0 && strafe == 0.0) {
+            mc.thePlayer.motionX = 0.0;
+            mc.thePlayer.motionZ = 0.0;
+        } else {
+            if (forward != 0.0) {
+                if (strafe > 0.0) {
+                    yaw += (float)(forward > 0.0 ? -45 : 45);
+                } else if (strafe < 0.0) {
+                    yaw += (float)(forward > 0.0 ? 45 : -45);
+                }
+                strafe = 0.0;
+                if (forward > 0.0) {
+                    forward = 1.0;
+                } else if (forward < 0.0) {
+                    forward = -1.0;
+                }
+            }
+            mc.thePlayer.motionX = forward * speed * Math.cos(Math.toRadians(yaw + 90.0f)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0f));
+            mc.thePlayer.motionZ = forward * speed * Math.sin(Math.toRadians(yaw + 90.0f)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0f));
+        }
+	}
+	
+	public static void damagePlayer() {
+        double x = mc.thePlayer.posX;
+        double y = mc.thePlayer.posY;
+        double z = mc.thePlayer.posZ;
+        float minValue = 3.1F;
+        if (mc.thePlayer.isPotionActive(Potion.jump)) {
+            minValue += mc.thePlayer.getActivePotionEffect(Potion.jump).getAmplifier() + 1.0F;
+        }
+        for (int i = 0; i < (int) ((minValue / (randomNumber(0.0890D, 0.0849D) - 1.0E-3D - Math.random() * 0.0002F - Math.random() * 0.0002F)) + 18); i++) {
+            mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(x, y + randomNumber(0.0655D, 0.0625D) - randomNumber(1.0E-3D, 1.0E-2D) - Math.random() * 0.0002F, z, false));
+            mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(x, y + Math.random() * 0.0002F, z, false));
+        }
+        mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer(true));
+    }
+	
+	public static double randomNumber(double max, double min) {
+        return Math.random() * (max - min) + min;
+    }
+}

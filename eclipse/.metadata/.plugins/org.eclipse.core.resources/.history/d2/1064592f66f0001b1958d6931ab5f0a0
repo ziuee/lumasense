@@ -1,0 +1,231 @@
+package me.luma.client.management.module.impl.movement;
+
+import java.util.Random;
+
+import org.lwjgl.input.Keyboard;
+
+import me.luma.client.core.registry.impl.ClientLoader;
+import me.luma.client.management.event.EventTarget;
+import me.luma.client.management.event.impl.Event2D;
+import me.luma.client.management.event.impl.EventMove;
+import me.luma.client.management.event.impl.EventUpdate;
+import me.luma.client.management.gui.clickgui.settings.SettingBoolean;
+import me.luma.client.management.gui.clickgui.settings.SettingSlider;
+import me.luma.client.management.module.Category;
+import me.luma.client.management.module.Module;
+import me.luma.client.management.module.impl.combat.KillAura;
+import me.luma.client.management.utils.MathUtils;
+import me.luma.client.management.utils.TimerUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.util.MovementInput;
+
+public class Speed extends Module {
+
+	private boolean boosted;
+	private TimerUtil timerUtil = new TimerUtil();
+	double Motion;
+	double speed;
+	private double moveSpeed, lastDist, moveSpeedOG, lastDistOG;
+	private int stage = 1;
+	
+	public SettingSlider Speed;
+	public SettingBoolean GaeTest;
+	public SettingBoolean GaeTest2;
+	public SettingBoolean GaeTest3;
+	public SettingBoolean GaeTest4;
+	public SettingBoolean GaeTest5;
+	public SettingBoolean GaeTest6;
+	public SettingBoolean GaeTest7;
+	public SettingBoolean GaeTest8;
+	public SettingBoolean GaeTest9;
+	public SettingBoolean GaeTest10;
+	public SettingBoolean GaeTest11;
+	public SettingBoolean GaeTest12;
+	public SettingBoolean GaeTest13;
+	public SettingBoolean GaeTest14;
+	public SettingBoolean GaeTest15;
+	public SettingBoolean GaeTest16;
+	
+	public Speed() {
+		super("Speed", Keyboard.KEY_V, Category.MOVEMENT);
+		
+		/*GaeTest = new SettingBoolean("GAE", this, false);
+		GaeTest2 = new SettingBoolean("GAE", this, false);
+		GaeTest3 = new SettingBoolean("GAE", this, false);
+		GaeTest4 = new SettingBoolean("GAE", this, false);
+		GaeTest5 = new SettingBoolean("GAE", this, false);
+		GaeTest6 = new SettingBoolean("GAE", this, false);
+		GaeTest7 = new SettingBoolean("GAE", this, false);
+		GaeTest8 = new SettingBoolean("GAE", this, false);
+		GaeTest9 = new SettingBoolean("GAE", this, false);
+		GaeTest10 = new SettingBoolean("GAE", this, false);
+		GaeTest11 = new SettingBoolean("GAE", this, false);
+		GaeTest12 = new SettingBoolean("GAE", this, false);
+		GaeTest13 = new SettingBoolean("GAE", this, false);
+		GaeTest14 = new SettingBoolean("GAE", this, false);
+		GaeTest15 = new SettingBoolean("GAE", this, false);
+		GaeTest16 = new SettingBoolean("GAE", this, false);*/
+		Speed = new SettingSlider("Speed", this, 0.37, 0, 0.9, false, false);
+	}
+	
+	@EventTarget
+	public void onUpdate(EventUpdate event) {
+		if(mc.thePlayer.onGround && (mc.gameSettings.keyBindRight.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
+			mc.thePlayer.jump();
+		}
+		
+		if(ClientLoader.loaderInstance.moduleManager.getModule("TargetStrafe").isToggled() && mc.thePlayer.onGround) {
+			if(KillAura.entityAttacked != null && mc.thePlayer.getDistanceToEntity(KillAura.entityAttacked) < KillAura.reach.getSliderValue()) {
+				mc.thePlayer.jump();
+			}
+		}
+		//setSpeed(Speed.getSliderValue());
+        if(mc.thePlayer.hurtTime > 9) {
+            speed = 1;
+        }else {
+            if(!mc.thePlayer.onGround) {
+            	speed = 0.369;;
+                //speed = 0.369;
+            }else {
+                speed = 0.5;
+            }
+        }
+        setSpeed(speed);
+		
+		/*if(timerUtil.hasReached(600)) {
+			Random r = new Random();
+			this.mc.thePlayer.sendChatMessage("LumaSense B1 | Made by ziue | Buy https://discord.gg/Cp2hv322TR | [" + r.nextInt(346262) + "]");
+	    	this.timerUtil.reset();
+		}*/
+		//mc.thePlayer.jump();
+		//ClientLoader.addChatMessage("BPS " + getBlocksPerSecond());
+	}
+	
+	public static void setSpeed(double speed) {
+        double forward = MovementInput.moveForward;
+        double strafe = MovementInput.moveStrafe;
+        float yaw = mc.thePlayer.rotationYaw;
+        if (forward == 0.0 && strafe == 0.0) {
+            mc.thePlayer.motionX = 0.0;
+            mc.thePlayer.motionZ = 0.0;
+        } else {
+            if (forward != 0.0) {
+                if (strafe > 0.0) {
+                    yaw += (float)(forward > 0.0 ? -45 : 45);
+                } else if (strafe < 0.0) {
+                    yaw += (float)(forward > 0.0 ? 45 : -45);
+                }
+                strafe = 0.0;
+                if (forward > 0.0) {
+                    forward = 1.0;
+                } else if (forward < 0.0) {
+                    forward = -1.0;
+                }
+            }
+            mc.thePlayer.motionX = forward * speed * Math.cos(Math.toRadians(yaw + 90.0f)) + strafe * speed * Math.sin(Math.toRadians(yaw + 90.0f));
+            mc.thePlayer.motionZ = forward * speed * Math.sin(Math.toRadians(yaw + 90.0f)) - strafe * speed * Math.cos(Math.toRadians(yaw + 90.0f));
+        }
+    }
+	
+	public static void setSpeed(double moveSpeed, float yaw, double strafe, double forward) {
+
+        double fforward = forward;
+        double sstrafe = strafe;
+        float yyaw = yaw;
+        if (forward != 0.0D) {
+            if (strafe > 0.0D) {
+                yaw += ((forward > 0.0D) ? -45 : 45);
+            } else if (strafe < 0.0D) {
+                yaw += ((forward > 0.0D) ? 45 : -45);
+            }
+            strafe = 0.0D;
+            if (forward > 0.0D) {
+                forward = 1.0D;
+            } else if (forward < 0.0D) {
+                forward = -1.0D;
+            }
+        }
+        if (strafe > 0.0D) {
+            strafe = 1.0D;
+        } else if (strafe < 0.0D) {
+            strafe = -1.0D;
+        }
+        double mx = Math.cos(Math.toRadians((yaw + 90.0F)));
+        double mz = Math.sin(Math.toRadians((yaw + 90.0F)));
+        mc.thePlayer.motionX = forward * moveSpeed * mx + strafe * moveSpeed * mz;
+        mc.thePlayer.motionZ = forward * moveSpeed * mz - strafe * moveSpeed * mx;
+    }
+	
+	public static void setSpeed2(double moveSpeed) {
+        setSpeed(moveSpeed, mc.thePlayer.rotationYaw, mc.thePlayer.movementInput.moveStrafe, mc.thePlayer.movementInput.moveForward);
+    }
+	
+	@Override
+	public void onEnable() {
+		mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+                mc.thePlayer.posY + 3.0001, mc.thePlayer.posZ, false));
+        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+                mc.thePlayer.posY, mc.thePlayer.posZ, false));
+        mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
+                mc.thePlayer.posY, mc.thePlayer.posZ, true));
+		super.onEnable();
+		timerUtil.reset();
+	}
+	
+	@Override
+	public void onDisable() {
+		super.onDisable();
+		timerUtil.reset();
+		mc.timer.timerSpeed = 1F;
+	}
+	
+	private double getBaseMoveSpeed() {
+        double baseSpeed = 0.2873;
+        if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+            final int amplifier = mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
+            baseSpeed *= 1.0 + (0.2 * amplifier);
+        }
+        return baseSpeed;
+    }
+	
+	public double getPosForSetPosX(double value) {
+		double yaw = Math.toRadians(Minecraft.getMinecraft().thePlayer.rotationYaw);
+		double x = -Math.sin(yaw) * value;
+		return x;
+	}
+
+	public double getPosForSetPosZ(double value) {
+		double yaw = Math.toRadians(Minecraft.getMinecraft().thePlayer.rotationYaw);
+		double z = Math.cos(yaw) * value;
+		return z;
+	}
+	
+	public static float getDirection() {
+		float var1 = mc.thePlayer.rotationYaw;
+		if (mc.thePlayer.moveForward < 0.0F) {
+	           var1 += 180.0F;
+	        }
+
+	        float forward = 1.0F;
+	        if (mc.thePlayer.moveForward < 0.0F) {
+	           forward = -0.5F;
+	        } else if (mc.thePlayer.moveForward > 0.0F) {
+	           forward = 0.5F;
+	        }
+
+	        if (mc.thePlayer.moveStrafing > 0.0F) {
+	           var1 -= 90.0F * forward;
+	        }
+
+	        if (mc.thePlayer.moveStrafing < 0.0F) {
+	           var1 += 90.0F * forward;
+	        }
+
+	        var1 *= 0.017453292F;
+	        return var1;
+	}
+
+}
