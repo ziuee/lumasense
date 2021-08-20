@@ -52,6 +52,8 @@ public class ClientLoader implements Registry {
 		Register handlers
 	 */
 	
+	// git test
+	
 	public static ClientLoader loaderInstance = new ClientLoader();
 	public static final RotationUtil ROTATION_UTIL = new RotationUtil();
 	public static final RaycastUtil RAYCAST_UTIL = new RaycastUtil();
