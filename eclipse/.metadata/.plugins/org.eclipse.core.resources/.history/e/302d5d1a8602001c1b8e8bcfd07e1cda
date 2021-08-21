@@ -1,0 +1,29 @@
+package me.luma.client.management.gui.alt;
+
+public class GuiAltManager {
+	
+	private String email, password;
+	
+	public Alt(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
+	
+	public String getEmail() { // Get email
+		return this.email;
+	}
+	
+	public String getPassword() { // Get password
+		return this.password;
+	}
+	
+	public Alt setEmail(String email) { // Set email
+		this.email = email;
+		return this;
+	}
+	
+	public Alt setPassword(String password) { // Set password
+		this.password = password;
+		return this;
+	}
+}

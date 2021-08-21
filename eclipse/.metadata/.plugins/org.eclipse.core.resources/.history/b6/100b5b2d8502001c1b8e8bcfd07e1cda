@@ -1,0 +1,20 @@
+package me.luma.client.management.gui.alt;
+
+import java.util.*;
+
+import net.minecraft.client.gui.GuiScreen;
+
+public class GuiAltManager extends GuiScreen {
+	
+	public final List<AltSlot> altSlots = new ArrayList<AltSlot>();
+
+	private final GuiScreen prevScreen;
+	
+	public int selectedSlot = -1;
+	
+	private boolean slotsHovered;
+
+	public GuiAltManager(GuiScreen prev) {
+		this.prevScreen = prev;
+	}
+}

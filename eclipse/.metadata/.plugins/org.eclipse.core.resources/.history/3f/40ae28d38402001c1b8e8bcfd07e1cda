@@ -1,0 +1,14 @@
+package me.luma.client.management.gui.alt;
+
+import java.util.*;
+
+public class AltManager {
+	
+	public static String apiKey;
+	private final List alts = new ArrayList();
+	
+	public List getAlts() { // Get alts
+		return alts;
+	}
+
+}

@@ -1,21 +1,7 @@
 package me.luma.client.core.registry.impl;
 
-import java.awt.AWTException;
 import java.awt.Desktop;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -33,6 +19,9 @@ import me.luma.client.management.event.EventTarget;
 import me.luma.client.management.event.impl.EventKey;
 import me.luma.client.management.event.impl.EventTick;
 import me.luma.client.management.font.FontManager;
+import me.luma.client.management.gui.alt.impl.AccountManager;
+import me.luma.client.management.gui.alt.utils.Files;
+import me.luma.client.management.gui.alt.utils.Strings;
 import me.luma.client.management.module.ModuleManager;
 import me.luma.client.management.utils.BetterColor;
 import me.luma.client.management.utils.DeltaUtil;
@@ -41,7 +30,6 @@ import me.luma.client.management.utils.Render2D;
 import me.luma.client.management.utils.killaura.RaycastUtil;
 import me.luma.client.management.utils.killaura.RotationUtil;
 import me.luma.client.management.utils.security.hwid.AuthUtil;
-import me.luma.client.management.utils.security.hwid.HWID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -62,6 +50,7 @@ public class ClientLoader implements Registry {
 	private DiscordRP discordRP = new DiscordRP();
 	public static EventManager eventManager;
 	public static FontManager fontManager;
+	private AccountManager accountManager;
 	public ConfigManager configManager;
 	private HUDManager hudManager;
 	public static Hud hud;
@@ -96,12 +85,9 @@ public class ClientLoader implements Registry {
 		 */
 		
 		if(auth) { // If auth == true, load client
+			
 			clientUser = JOptionPane.showInputDialog(null, "What should we call you?");
 			
-			/*
-				Initialize handlers
-			 */
-				
 			/*try {
 				desktop.getDesktop().browse(new URI("http://luma.best")); // epic website promo go brrr
 			} catch (Exception e) {
@@ -109,6 +95,16 @@ public class ClientLoader implements Registry {
 			}*/
 			
 			NotificationUtil.sendInfo("Luma", "Successfully launched!");
+			
+			String clientFolder = (new File(".")).getAbsolutePath();
+	        clientFolder = (clientFolder.contains("jars") ? (new File(".")).getAbsolutePath().substring(0, clientFolder.length() - 2) : (new File(".")).getAbsolutePath()) + Strings.getSplitter() + Luma.clientName;
+	        String accountManagerFolder = clientFolder + Strings.getSplitter() + "alts";
+	        Files.createRecursiveFolder(accountManagerFolder);
+	        this.accountManager = new AccountManager(new File(accountManagerFolder));
+			
+			/*
+			 * Initialize handlers
+			 */
 				
 			this.clientColor = new BetterColor(50, 0, 255);
 			discordRP.start();
@@ -139,6 +135,10 @@ public class ClientLoader implements Registry {
 	public DiscordRP getDiscordRP() {
 		return discordRP;
 	}
+	
+	public AccountManager getAccountManager() {
+        return this.accountManager;
+    }
 	
 	@EventTarget
 	public void onTick(EventTick e) {

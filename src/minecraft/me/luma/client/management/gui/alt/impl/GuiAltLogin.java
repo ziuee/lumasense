@@ -4,125 +4,91 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 
-import me.luma.client.core.registry.impl.ClientLoader;
-import me.luma.client.management.gui.alt.threading.AltLoginThread;
+import me.luma.client.management.gui.alt.thread.AccountLoginThread;
+import me.luma.client.management.gui.alt.utils.PasswordField;
+import me.luma.client.management.gui.alt.utils.Strings;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 public class GuiAltLogin extends GuiScreen {
-	private GuiPasswordField password;
-	private final GuiScreen previousScreen;
-	private AltLoginThread thread;
-	private GuiTextField username;
-	private GuiTextField combined;
+    private GuiTextField email;
+    private PasswordField password;
+    private AccountLoginThread loginThread;
+    private GuiScreen parent;
 
-	public GuiAltLogin(final GuiScreen previousScreen) {
-		this.previousScreen = previousScreen;
-	}
+    public GuiAltLogin(GuiScreen parent) {
+        this.parent = parent;
+    }
 
-	@Override
-	protected void actionPerformed(final GuiButton button) {
-		switch (button.id) {
-		case 1: {
-			mc.displayGuiScreen(this.previousScreen);
-			break;
-		}
-		case 0: {
-			if (this.combined.getText().isEmpty()) {
-				this.thread = new AltLoginThread(this.username.getText(), this.password.getText(), true);
-			} else if (!this.combined.getText().isEmpty() && this.combined.getText().contains(":")) {
-				final String u = this.combined.getText().split(":")[0];
-				final String p = this.combined.getText().split(":")[1];
-				this.thread = new AltLoginThread(u.replaceAll(" ", ""), p.replaceAll(" ", ""), true);
-			} else {
-				this.thread = new AltLoginThread(this.username.getText(), this.password.getText(), true);
-			}
-			this.thread.start();
-			break;
-		}
-		}
-	}
+    public void initGui() {
+        Keyboard.enableRepeatEvents(true);
+        this.buttonList.clear();
+        this.buttonList.add(new GuiButton(0, width / 2 - 100, height / 4 + 92 + 12, "Login"));
+        this.buttonList.add(new GuiButton(1, width / 2 - 100, height / 4 + 116 + 12, "Back"));
+        this.email = new GuiTextField(0, this.fontRendererObj, width / 2 - 100, 158, 200, 20);
+        this.email.setMaxStringLength(Integer.MAX_VALUE);
+        this.email.setFocused(true);
+        this.password = new PasswordField(this.fontRendererObj, width / 2 - 100, 180, 200, 20);
+        this.password.setMaxStringLength(Integer.MAX_VALUE);
+    }
 
-	@Override
-	public void drawScreen(final int x, final int y, final float z) {
-		this.drawDefaultBackground();
-		this.username.drawTextBox();
-		this.password.drawTextBox();
-		this.combined.drawTextBox();
-		ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawCenteredString("Alt Login", this.width / 2, 20, -1);
-		ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawCenteredString((this.thread == null) ? "\u00A7eWaiting..." : this.thread.getStatus(),
-				this.width / 2, 29, -1);
-		if (this.username.getText().isEmpty()) {
-			mc.fontRendererObj.drawStringWithShadow("Username / E-Mail", (float) (this.width / 2 - 96), 66.0f,
-					-7829368);
-		}
-		if (this.password.getText().isEmpty()) {
-			mc.fontRendererObj.drawStringWithShadow("Password", (float) (this.width / 2 - 96), 106.0f, -7829368);
-		}
-		if (this.combined.getText().isEmpty()) {
-			mc.fontRendererObj.drawStringWithShadow("Email:Password", (float) (this.width / 2 - 96), 146.0f, -7829368);
-		}
-		super.drawScreen(x, y, z);
-	}
+    public void keyTyped(char character, int keyCode) throws IOException {
+        this.email.textboxKeyTyped(character, keyCode);
+        this.password.textboxKeyTyped(character, keyCode);
+        if (keyCode == 15) {
+            this.email.setFocused(!this.email.isFocused());
+            this.password.setFocused(!this.password.isFocused());
+        }
 
-	@Override
-	public void initGui() {
-		final int var3 = this.height / 4 + 24;
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, var3 + 72 + 12, "Login"));
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, var3 + 72 + 12 + 24, "Back"));
-		this.username = new GuiTextField(1, mc.fontRendererObj, this.width / 2 - 100, 60, 200, 20);
-		this.password = new GuiPasswordField(mc.fontRendererObj, this.width / 2 - 100, 100, 200, 20);
-		this.combined = new GuiTextField(var3, mc.fontRendererObj, this.width / 2 - 100, 140, 200, 20);
-		this.username.setFocused(true);
-		this.username.setMaxStringLength(200);
-		this.password.func_146203_f(200);
-		this.combined.setMaxStringLength(200);
-		Keyboard.enableRepeatEvents(true);
-	}
+        if (keyCode == 28) {
+            this.actionPerformed((GuiButton)this.buttonList.get(0));
+        }
 
-	@Override
-	protected void keyTyped(final char character, final int key) {
-		try {
-			super.keyTyped(character, key);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if (character == '\t'
-				&& (this.username.isFocused() || this.combined.isFocused() || this.password.isFocused())) {
-			this.username.setFocused(!this.username.isFocused());
-			this.password.setFocused(!this.password.isFocused());
-			this.combined.setFocused(!this.combined.isFocused());
-		}
-		if (character == '\r') {
-			this.actionPerformed(this.buttonList.get(0));
-		}
-		this.username.textboxKeyTyped(character, key);
-		this.password.textboxKeyTyped(character, key);
-		this.combined.textboxKeyTyped(character, key);
-	}
+    }
 
-	@Override
-	protected void mouseClicked(final int x, final int y, final int button) {
-		try {
-			super.mouseClicked(x, y, button);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		this.username.mouseClicked(x, y, button);
-		this.password.mouseClicked(x, y, button);
-		this.combined.mouseClicked(x, y, button);
-	}
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.email.mouseClicked(mouseX, mouseY, mouseButton);
+        this.password.mouseClicked(mouseX, mouseY, mouseButton);
+    }
 
-	@Override
-	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
-	}
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.mc.fontRendererObj, "Direct Login", width / 2, 20, -1);
+        if (this.email.getText().isEmpty()) {
+            this.drawString(this.mc.fontRendererObj, "Email", width / 2 - 96, 164, -7829368);
+        }
 
-	@Override
-	public void updateScreen() {
-		this.username.updateCursorCounter();
-		this.password.updateCursorCounter();
-		this.combined.updateCursorCounter();
-	}
+        if (this.password.getText().isEmpty()) {
+            this.drawString(this.mc.fontRendererObj, "Password", width / 2 - 96, 185, -7829368);
+        }
+
+        this.email.drawTextBox();
+        this.password.drawTextBox();
+        this.drawCenteredString(this.mc.fontRendererObj, Strings.simpleTranslateColors(this.loginThread == null ? "&eWaiting for login..." : this.loginThread.getStatus()), width / 2, 30, -1);
+        super.drawScreen(mouseX, mouseY, partialTicks);
+    }
+
+    protected void actionPerformed(GuiButton button) {
+        switch(button.id) {
+        case 0:
+            if (!this.email.getText().isEmpty()) {
+                if (this.email.getText().contains(":")) {
+                    String[] split = this.email.getText().split(":");
+                    Account account1 = new Account(split[0], split[1], split[0]);
+                    this.loginThread = new AccountLoginThread(account1.getEmail(), account1.getPassword());
+                    this.loginThread.start();
+                }
+
+                Account account = new Account(this.email.getText(), this.password.getText(), this.email.getText());
+                this.loginThread = new AccountLoginThread(account.getEmail(), account.getPassword());
+                this.loginThread.start();
+            }
+            break;
+        case 1:
+            this.mc.displayGuiScreen(this.parent);
+        }
+
+    }
 }

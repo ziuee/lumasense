@@ -72,6 +72,7 @@ public class ESP extends Module {
 		
 		ArrayList<String> espMode = new ArrayList<String>();
 		espMode.add("Outline");
+		espMode.add("Blend");
 		espModee = new SettingArrayList("ESP Mode", this, espMode, "Blend");
 		
 		skeleton = new SettingBoolean("Skeleton", this, false);

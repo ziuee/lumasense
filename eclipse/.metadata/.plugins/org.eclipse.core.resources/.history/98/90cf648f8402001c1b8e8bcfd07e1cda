@@ -1,0 +1,32 @@
+package me.luma.client.management.gui.alt.gui;
+
+import me.luma.client.management.gui.clickgui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+
+public class GuiDirectLogin extends GuiScreen {
+	
+	private final GuiScreen previousScreen;
+	private AltLoginService thread;
+	private GuiTextField combined;
+	
+	public GuiDirectLogin(GuiScreen button) {
+		this.previousScreen = previousScreen;
+	}
+	
+	protected void actionPerformed(GuiButton button) {
+		switch(button.id) {
+		case 0:
+			if(!this.combined.getText().isEmpty() && this.combined.getText().contains(":")) {
+				String u = this.combined.getText().split(":")[0];
+				String p = this.combined.getText().split(":")[1];
+				this.thread = new AltLoginService(u.replaceAll(" ", ""));
+				this.thread.start();
+			}
+			break;
+		case 1:
+			this.mc.displayGuiScreen(this.previousScreen);
+		}
+	}
+
+}

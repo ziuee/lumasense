@@ -6,7 +6,6 @@ import java.io.IOException;
 import me.luma.client.core.Luma;
 import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.gui.alt.GuiAltManager;
-import me.luma.client.management.gui.mainmenu.login.GuiAltLogin;
 import me.luma.client.management.gui.menu.changelog.GuiChanges;
 import me.luma.client.management.utils.Draw;
 import me.luma.client.management.utils.RenderUtils;
@@ -36,17 +35,16 @@ public class GuiCustomMainMenu extends GuiScreen implements GuiYesNoCallback {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-//        RenderUtils.drawRect(0, 0, width, height, Color.BLACK.getRGB());
+  	    //RenderUtils.drawRect(0, 0, width, height, Color.BLACK.getRGB());
 
-    		Draw.drawImg(new ResourceLocation("luma/mainmenu/birdbg.jpeg"), 0.0, 0.0, width, height);
+    	Draw.drawImg(new ResourceLocation("luma/mainmenu/birdbg.jpeg"), 0.0, 0.0, width, height);
 
-        	Gui.drawGradientRect(width / 2 - 80, height / 2 - 72, width / 2 + 110, height / 2  + (5 * 23), new Color(10, 10, 10, 255).getRGB(), new Color(10, 10, 10, 255).getRGB());
-            Gui.drawGradientRect(width / 2 - 79, height / 2 - 71, width / 2 + 109, height / 2 - 1 + (5 * 23), new Color(59, 59, 59, 255).getRGB(), new Color(59, 59, 59, 255).getRGB());
-//            Gui.drawGradientRect(width / 2 - 76, height / 2 - 69, width / 2 + 106, height / 2 - 28 + (5 * 23), new Color(74, 74, 74, 255).getRGB(), new Color(74, 74, 74, 255).getRGB());
-            Gui.drawGradientRect(width / 2 - 78, height / 2 - 70, width / 2 + 108, height / 2 - 2 + (5 * 23), new Color(20, 20, 20, 255).getRGB(), new Color(10, 10, 10, 255).getRGB());
-            ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawCenteredString(Luma.clientName + " " + "v" + Luma.version, width / 2 + 13, height / 2 - 67, -1);
-            super.drawScreen(mouseX, mouseY, partialTicks);
-
+        Gui.drawGradientRect(width / 2 - 80, height / 2 - 72, width / 2 + 110, height / 2  + (5 * 23), new Color(10, 10, 10, 255).getRGB(), new Color(10, 10, 10, 255).getRGB());
+        Gui.drawGradientRect(width / 2 - 79, height / 2 - 71, width / 2 + 109, height / 2 - 1 + (5 * 23), new Color(59, 59, 59, 255).getRGB(), new Color(59, 59, 59, 255).getRGB());
+        Gui.drawGradientRect(width / 2 - 76, height / 2 - 69, width / 2 + 106, height / 2 - 28 + (5 * 23), new Color(74, 74, 74, 255).getRGB(), new Color(74, 74, 74, 255).getRGB());
+        Gui.drawGradientRect(width / 2 - 78, height / 2 - 70, width / 2 + 108, height / 2 - 2 + (5 * 23), new Color(20, 20, 20, 255).getRGB(), new Color(10, 10, 10, 255).getRGB());
+        ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawCenteredString(Luma.clientName + " " + "v" + Luma.version, width / 2 + 13, height / 2 - 67, -1);
+        super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class GuiCustomMainMenu extends GuiScreen implements GuiYesNoCallback {
         }
 
         if (button.id == 3) {
-            this.mc.displayGuiScreen(new GuiAltLogin(this));
+            this.mc.displayGuiScreen(new GuiAltManager());
 
         }
         if (button.id == 4) {

@@ -17,7 +17,6 @@ import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.event.impl.EventKey;
 import me.luma.client.management.event.impl.EventTick;
-import me.luma.client.management.gui.mainmenu.MainMenu;
 import me.luma.client.management.gui.menu.GuiCustomMainMenu;
 import me.luma.client.management.utils.security.login.GuiClientLogin;
 

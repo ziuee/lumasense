@@ -1,0 +1,35 @@
+package me.luma.client.management.gui.alt;
+
+import net.minecraft.client.gui.GuiScreen;
+
+public class GuiAltManager extends GuiScreen {
+	
+	public static GuiAltManager INSTANCE;
+	public AccountLoginThread loginThread;
+	private GuiAccountList accountList;
+	public Account currentAccount;
+
+	private String status = "&fWaiting for account input.";
+	
+	public GuiAltManager() 
+	{
+		INSTANCE = this;
+	}
+	
+	public void initGui()
+	{
+		this.accountList = new GuiAccountList(this);
+		this.accountList.registerScrollButtons(7, 8);
+		this.accountList.elementClicked(-1, false, 0, 0);
+		this.buttonList.add(new GuiButton(0, width / 2 + 158, height - 24, 100, 20, "Cancel"));
+		this.buttonList.add(new GuiButton(1, width / 2 + 158, height - 24, 100, 20, "Login"));
+		this.buttonList.add(new GuiButton(2, width / 2 + 158, height - 24, 100, 20, "Remove"));
+		this.buttonList.add(new GuiButton(3, width / 2 + 158, height - 24, 100, 20, "Import"));
+		this.buttonList.add(new GuiButton(4, width / 2 + 158, height - 24, 100, 20, "Direct Login"));
+		this.buttonList.add(new GuiButton(5, width / 2 + 158, height - 24, 100, 20, "Add"));
+		this.buttonList.add(new GuiButton(6, width / 2 + 158, height - 24, 100, 20, "Cancel"));
+		this.buttonList.add(new GuiButton(7, width / 2 + 158, height - 24, 100, 20, "Cancel"));
+		this.buttonList.add(new GuiButton(8, width / 2 + 158, height - 24, 100, 20, "Cancel"));
+		this.buttonList.add(new GuiButton(9, width / 2 + 158, height - 24, 100, 20, "Cancel"));
+	}
+}

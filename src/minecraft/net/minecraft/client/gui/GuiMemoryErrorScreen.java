@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import java.io.IOException;
 
-import me.luma.client.management.gui.mainmenu.MainMenu;
+import me.luma.client.management.gui.menu.GuiCustomMainMenu;
 import net.minecraft.client.resources.I18n;
 
 public class GuiMemoryErrorScreen extends GuiScreen
@@ -25,7 +25,7 @@ public class GuiMemoryErrorScreen extends GuiScreen
     {
         if (button.id == 0)
         {
-            this.mc.displayGuiScreen(new MainMenu());
+            this.mc.displayGuiScreen(new GuiCustomMainMenu());
         }
         else if (button.id == 1)
         {

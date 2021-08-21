@@ -7,8 +7,7 @@ import java.net.URI;
 import org.lwjgl.input.Keyboard;
 
 import me.luma.client.core.registry.impl.ClientLoader;
-import me.luma.client.management.gui.mainmenu.MainMenu;
-import me.luma.client.management.gui.mainmenu.login.PasswordField;
+import me.luma.client.management.gui.alt.utils.PasswordField;
 import me.luma.client.management.gui.menu.GuiCustomMainMenu;
 import me.luma.client.management.utils.NotificationUtil;
 import me.luma.client.management.utils.security.hwid.AuthUtil;
