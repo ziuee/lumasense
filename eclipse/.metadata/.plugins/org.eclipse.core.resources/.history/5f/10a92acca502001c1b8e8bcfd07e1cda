@@ -26,7 +26,6 @@ public class ModuleManager {
 		modules.add(new LongJump());
 		modules.add(new AntiVoid());
 		modules.add(new InvMove());
-		modules.add(new Sprint());
 		modules.add(new Phase());
 		modules.add(new Speed());
 		modules.add(new Step());

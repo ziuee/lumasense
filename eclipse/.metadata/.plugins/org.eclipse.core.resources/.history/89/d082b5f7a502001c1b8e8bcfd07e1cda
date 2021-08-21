@@ -14,7 +14,7 @@ public class ModuleManager {
 	public ArrayList<Module> modules = new ArrayList<Module>();
 	
 	public ModuleManager() {
-		modules.add(new TargetStrafe());
+		/*modules.add(new TargetStrafe());
 		modules.add(new Criticals());
 		modules.add(new KillAura());
 		modules.add(new Velocity());
@@ -60,7 +60,7 @@ public class ModuleManager {
 		
 		modules.add(new KillSults());
 		modules.add(new ClickGui());
-		modules.add(new Logger());
+		modules.add(new Logger());*/
 	}
 
 	public ArrayList<Module> getModules() {
