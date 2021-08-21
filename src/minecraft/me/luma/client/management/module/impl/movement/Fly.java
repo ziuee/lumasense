@@ -315,27 +315,9 @@ public class Fly extends Module {
 		}
 	}
 	
-	public static void sendPackets() {
-		yPos += 1E-10;
-			try {
-				for (int i = 0; i < packetListZ.size(); i++) {
-					Packet packet = packetListZ.get(i);
-					if (packet != null) {
-
-						mc.thePlayer.sendQueue.addToSendQueueNoEvent(packet);
-						
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			packetListZ.clear();
-			mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + yPos, mc.thePlayer.posZ);
-		}
-	
 	public static void setSpeed(EventMove moveEvent, double moveSpeed) {
-	      setSpeed(moveEvent, moveSpeed, mc.thePlayer.rotationYaw, (double)mc.thePlayer.movementInput.moveStrafe, (double)mc.thePlayer.movementInput.moveForward);
-	   }
+		setSpeed(moveEvent, moveSpeed, mc.thePlayer.rotationYaw, (double)mc.thePlayer.movementInput.moveStrafe, (double)mc.thePlayer.movementInput.moveForward);
+	}
 	
 	public static void setSpeed(EventMove moveEvent, double moveSpeed, float pseudoYaw, double pseudoStrafe, double pseudoForward) {
 	      double forward = pseudoForward;
@@ -375,17 +357,14 @@ public class Fly extends Module {
 		this.damaged = false;
 		timerUtil.reset();
 		if(Damage.getBooleanValue()) {
-            mc.thePlayer.sendQueue.addToSendQueueNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
-            mc.thePlayer.posY + 3.0001, mc.thePlayer.posZ, false));
-            mc.thePlayer.sendQueue.addToSendQueueNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
-            mc.thePlayer.posY, mc.thePlayer.posZ, false));
-            mc.thePlayer.sendQueue.addToSendQueueNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
-            mc.thePlayer.posY, mc.thePlayer.posZ, true));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 3.0001, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
+            mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
 		}
 		
-		/*if (mc.thePlayer == null) {
+		if (mc.thePlayer == null) {
             return;
-        }*/
+        }
 	}
 	
 	@Override

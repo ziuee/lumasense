@@ -2,6 +2,7 @@ package me.luma.client.core.registry.impl;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.net.URI;
 
 import javax.swing.JOptionPane;
 
@@ -71,14 +72,14 @@ public class ClientLoader implements Registry {
 		
 		auth = true; // Remove when fixed
 		
-		if(AuthUtil.check()) { // Checks if HWID is correct, if then launch client.
+		/*if(AuthUtil.check()) { // Checks if HWID is correct, if then launch client.
             NotificationUtil.sendInfo("Luma", "You were successfully authenticated!");
 			auth = true; // Set auth to true (load client)
 		} else {
 			auth = false; // Set auth to false (crash client)
 			NotificationUtil.sendError("Luma", "Your HWID is not whitelisted!");
 			//AuthUtil.close();
-		}
+		}*/
 		
 		/*
 		 * Initialize Client 
@@ -98,7 +99,7 @@ public class ClientLoader implements Registry {
 			String clientFolder = (new File(".")).getAbsolutePath();
 	        clientFolder = (clientFolder.contains("jars") ? (new File(".")).getAbsolutePath().substring(0, clientFolder.length() - 2) : (new File(".")).getAbsolutePath()) + Strings.getSplitter() + Luma.clientName;
 	        String accountManagerFolder = clientFolder + Strings.getSplitter() + "alts";
-	        Files.createRecursiveFolder(accountManagerFolder);
+	        Files.createRecursiveFolder(accountManagerFolder); // Create alts folder
 	        this.accountManager = new AccountManager(new File(accountManagerFolder));
 			
 			/*

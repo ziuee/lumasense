@@ -112,7 +112,7 @@ public class KillAura extends Module
     
     @EventTarget
     public void onRender(Event3D event) {
-    	if (entityAttacked.getDistanceToEntity((Entity)KillAura.mc.thePlayer) <= KillAura.reach.getSliderValue()) {
+    	//if (entityAttacked.getDistanceToEntity((Entity)KillAura.mc.thePlayer) <= KillAura.reach.getSliderValue()) {
     		/*time += .01 * (ClientLoader.loaderInstance.DELTA_UTIL.deltaTime * .1);
 			final double height = 0.5 * (1 + Math.sin(2 * Math.PI * (time * .3)));
 
@@ -164,7 +164,7 @@ public class KillAura extends Module
 			GlStateManager.disableBlend();
 			GlStateManager.resetColor();
 			return;*/
-    	}
+    	//}
     	time += (.01 + (renderingTarget.hurtTime * .005)) * (ClientLoader.loaderInstance.DELTA_UTIL.deltaTime * .1);
 		final Vec3 pos = renderingTarget.getPositionVector();
     }
