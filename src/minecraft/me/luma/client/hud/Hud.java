@@ -98,7 +98,7 @@ public class Hud extends GuiIngame {
 		int counter = 0;
 		Color c2 = Color.getHSBColor(0.1F, 0.1F, 0F);
 		Color c = Color.getHSBColor(HUD.hudHue.getSliderValue().floatValue(), HUD.hudSaturation.getSliderValue().floatValue(), 1.0F);
-		int lumasense = getGradientOffset(c, c2, (Math.abs(((System.currentTimeMillis()) / 10)) / 80D) + ((ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getHeight(Luma.clientFiles) + 135))).getRGB();
+		int lumasense = getGradientOffset(c, c2, (Math.abs(((System.currentTimeMillis()) / 10)) / 80D) + ((ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getHeight(Luma.clientName) + 135))).getRGB();
 		//drawRainbowRect(3, 2, 75, 2, 2);
 		//Gui.drawRect(3, 16, 75, 2, 0xff000000);
 		if(HUD.clientName.getArraListValue().equalsIgnoreCase("Logo")) {

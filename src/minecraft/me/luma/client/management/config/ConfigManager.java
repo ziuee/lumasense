@@ -17,7 +17,7 @@ import me.luma.client.core.Luma;
 
 public class ConfigManager extends Manager<Config>{
 
-	public static final File CONFIGS_DIR = new File(Luma.clientFiles, "configs");
+	public static final File CONFIGS_DIR = new File(Luma.clientName, "configs");
     public static final String EXTENTION = ".json";
 	
     public ConfigManager() {

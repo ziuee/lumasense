@@ -4,10 +4,8 @@ public class Luma {
 	
 	public static String clientName = "Luma";
 	public static String clientDev = "ziue";
-	public static String version = "1.0.4";
-	public static String build = "234";
-	
-	public static String clientFiles = "LumaSense";
+	public static String version = "1.1";
+	public static String build = "1023";
 	
 	private Luma(String clientName, String version, String clientDev) {
 		this.clientName = clientName;
