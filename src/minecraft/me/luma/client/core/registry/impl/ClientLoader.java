@@ -59,13 +59,15 @@ public class ClientLoader implements Registry {
 	public static final Render2D RENDER2D = new Render2D();
 	public static ModuleManager moduleManager = new ModuleManager();
 	public NotificationManager notificationManager;
-	private HUDManager hudManager;
 	private DiscordRP discordRP = new DiscordRP();
-	public ConfigManager configManager;
 	public static EventManager eventManager;
 	public static FontManager fontManager;
+	public ConfigManager configManager;
+	private HUDManager hudManager;
 	public static Hud hud;
+	
 	public static String clientUser;
+	
 	boolean auth = false;
 	
 	private Desktop desktop;
@@ -75,40 +77,27 @@ public class ClientLoader implements Registry {
 	public void startLuma() throws Exception {
 
 		/*
-		 * Auth User (aka gay)
+		 * Auth User
 		 */
 		
-		//System.out.println(HWID.getHWID()); // grab hwid cus epic
-		auth = true;
-		/*if(AuthUtil.check()) {
+		auth = true; // Remove when fixed
+		
+		if(AuthUtil.check()) { // Checks if HWID is correct, if then launch client.
             NotificationUtil.sendInfo("Luma", "You were successfully authenticated!");
-			auth = true;
+			auth = true; // Set auth to true (load client)
 		} else {
-			auth = false;
+			auth = false; // Set auth to false (crash client)
 			NotificationUtil.sendError("Luma", "Your HWID is not whitelisted!");
 			//AuthUtil.close();
-		}*/
+		}
 		
 		/*
 		 * Initialize Client 
 		 */
-		if(auth) {
-			//File name = new File("LumaSense" + System.getProperty("file.separator") + "luma.user"); // useless optionpane
-			//if(!name.exists()) {
-				clientUser = JOptionPane.showInputDialog(null, "What should we call you?");
-				/*try {
-					File file = new File("LumaSense" + System.getProperty("file.separator") + "luma.user");
-					FileOutputStream is = new FileOutputStream(file);
-					PrintWriter osw = new PrintWriter(new OutputStreamWriter(is));
-					BufferedWriter bufferedwriter = new BufferedWriter(osw);
-					bufferedwriter.write(clientUser);
-					bufferedwriter.close();
-				} catch (Exception e) {
-					
-				}*/
-					
-			//}
-
+		
+		if(auth) { // If auth == true, load client
+			clientUser = JOptionPane.showInputDialog(null, "What should we call you?");
+			
 			/*
 				Initialize handlers
 			 */
@@ -131,10 +120,10 @@ public class ClientLoader implements Registry {
 			fontManager = new FontManager();
 			configManager = new ConfigManager();
 			
-			Display.setTitle("Luma " + Luma.version); // me and the boys renaming mc to lumasense
+			Display.setTitle("Luma " + Luma.version); // Change application title
 			eventManager.register(this);
 		} else {
-			return; // Crash client if user isn't verified.
+			return; // Crash client if auth == false.
 		}
 	}
 	
@@ -154,16 +143,16 @@ public class ClientLoader implements Registry {
 	@EventTarget
 	public void onTick(EventTick e) {
 		if(Minecraft.getMinecraft().gameSettings.LUMA_GUI_MOD_POS.isPressed()) {
-			hudManager.openConfigScreen();
+			hudManager.openConfigScreen(); // Open HudManger on key pressed
 		}
 	}
 	
 	@EventTarget
     public void onKey(EventKey event) {
-        moduleManager.getModules().stream().filter(module -> module.getKey() == event.getKey()).forEach(module -> module.toggle());
+        moduleManager.getModules().stream().filter(module -> module.getKey() == event.getKey()).forEach(module -> module.toggle()); // If key is pressed, toggle module
     }
 	
-	public static void addChatMessage(String s){
+	public static void addChatMessage(String s) {
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY + "[" + EnumChatFormatting.RED + "Luma" + EnumChatFormatting.DARK_GRAY + "] " + EnumChatFormatting.RESET + s));
     }
 }
