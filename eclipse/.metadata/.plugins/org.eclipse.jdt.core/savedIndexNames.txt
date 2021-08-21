@@ -24,7 +24,6 @@ INDEX VERSION 1.131+C:\Users\remig\Desktop\lumasense\eclipse\.metadata\.plugins\
 3263897811.index
 3974213608.index
 1108429494.index
-137624701.index
 4212195811.index
 897659091.index
 3421597620.index

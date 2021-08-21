@@ -85,6 +85,7 @@ public class ClientLoader implements Registry {
 		 */
 		
 		if(auth) { // If auth == true, load client
+			ClientLoader.loaderInstance.getDiscordRP().update("Luma", "Launching");
 			clientUser = JOptionPane.showInputDialog(null, "What should we call you?");
 			
 			/*try {

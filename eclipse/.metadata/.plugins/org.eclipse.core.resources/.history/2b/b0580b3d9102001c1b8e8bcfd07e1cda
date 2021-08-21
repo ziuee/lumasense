@@ -1,8 +1,6 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
-
-import me.luma.client.core.registry.impl.ClientLoader;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
@@ -40,7 +38,6 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
      */
     public void initGui()
     {
-    	ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Options");
         int i = 0;
         this.field_146442_a = I18n.format("options.title", new Object[0]);
 

@@ -18,8 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import me.luma.client.core.registry.impl.ClientLoader;
-
 public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback
 {
     private static final Logger logger = LogManager.getLogger();
@@ -50,7 +48,6 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback
      */
     public void initGui()
     {
-    	ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Singleplayer Menu");
         this.field_146628_f = I18n.format("selectWorld.title", new Object[0]);
 
         try

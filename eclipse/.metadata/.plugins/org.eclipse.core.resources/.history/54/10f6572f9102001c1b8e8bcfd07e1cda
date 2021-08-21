@@ -50,7 +50,6 @@ public final class GuiChanges extends GuiScreen {
 
     @Override
     public void initGui() {
-    	ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Change Log");
         this.buttonList.clear();
         this.buttonList.add(new GuiButton(0, this.width / 2 - 76, this.height - 26, 149, 20, "Back"));
         this.changeSlot = new ChangeSlot(this);

@@ -22,14 +22,13 @@ public class GuiCustomMainMenu extends GuiScreen implements GuiYesNoCallback {
 
     @Override
     public void initGui() {
-    	ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Main Menu");
-		String[] displayNames = new String[]{"Singleplayer", "Multiplayer", "Options", "Alt Manager", "Changelog", "Exit"};
-        int offset = height / 2 - 50;
-        for (int i = 0; i < displayNames.length; i++) {
-        	String name = displayNames[i];
-            buttonList.add(new GuiButton(i, width / 2 - 75, offset, 180, 20, name));
-            offset += 26;
-        }
+    		 String[] displayNames = new String[]{"Singleplayer", "Multiplayer", "Options", "Alt Manager", "Changelog", "Exit"};
+             int offset = height / 2 - 50;
+             for (int i = 0; i < displayNames.length; i++) {
+                 String name = displayNames[i];
+                 buttonList.add(new GuiButton(i, width / 2 - 75, offset, 180, 20, name));
+                 offset += 26;
+             }
 
         super.initGui();
     }

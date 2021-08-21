@@ -85,6 +85,7 @@ public class ClientLoader implements Registry {
 		 */
 		
 		if(auth) { // If auth == true, load client
+			
 			clientUser = JOptionPane.showInputDialog(null, "What should we call you?");
 			
 			/*try {
@@ -115,6 +116,7 @@ public class ClientLoader implements Registry {
 			fontManager = new FontManager();
 			configManager = new ConfigManager();
 			
+			ClientLoader.loaderInstance.getDiscordRP().update("Launching", "");
 			Display.setTitle("Luma " + Luma.version); // Change application title
 			eventManager.register(this);
 		} else {

@@ -41,7 +41,6 @@ public class GuiAltManager extends GuiScreen {
 	
 	public void initGui()
 	{
-		ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Alt Manager");
 		this.accountList = new GuiAccountList(this);
 		this.accountList.registerScrollButtons(7, 8);
 		this.accountList.elementClicked(-1, false, 0, 0);
@@ -81,7 +80,6 @@ public class GuiAltManager extends GuiScreen {
         case 0:
             if (this.loginThread == null || !this.loginThread.getStatus().contains("Logging in")) {
                 this.mc.displayGuiScreen(new GuiCustomMainMenu());
-                ClientLoader.loaderInstance.getDiscordRP().update("Idle", "Main Menu");
             }
             break;
         case 1:
