@@ -37,7 +37,7 @@ public class GuiCustomMainMenu extends GuiScreen implements GuiYesNoCallback {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
   	    //RenderUtils.drawRect(0, 0, width, height, Color.BLACK.getRGB());
 
-    	Draw.drawImg(new ResourceLocation("luma/mainmenu/background.jpg"), 0.0, 0.0, width, height);
+    	Draw.drawImg(new ResourceLocation("luma/mainmenu/birdbg.jpeg"), 0.0, 0.0, width, height);
 
         Gui.drawGradientRect(width / 2 - 80, height / 2 - 72, width / 2 + 110, height / 2  + (5 * 23), new Color(10, 10, 10, 255).getRGB(), new Color(10, 10, 10, 255).getRGB());
         Gui.drawGradientRect(width / 2 - 79, height / 2 - 71, width / 2 + 109, height / 2 - 1 + (5 * 23), new Color(59, 59, 59, 255).getRGB(), new Color(59, 59, 59, 255).getRGB());

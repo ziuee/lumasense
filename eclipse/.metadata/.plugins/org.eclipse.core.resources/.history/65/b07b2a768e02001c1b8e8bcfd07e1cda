@@ -19,11 +19,9 @@ import me.luma.client.management.gui.alt.impl.GuiAddAlt;
 import me.luma.client.management.gui.alt.thread.AccountLoginThread;
 import me.luma.client.management.gui.alt.utils.Strings;
 import me.luma.client.management.gui.menu.GuiCustomMainMenu;
-import me.luma.client.management.utils.Draw;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 
 public class GuiAltManager extends GuiScreen {
 	
@@ -58,8 +56,7 @@ public class GuiAltManager extends GuiScreen {
 	
 	public void drawScreen(int p_drawScreen_1_, int p_drawScreen_2_, float p_drawScreen_3_) {
         ScaledResolution scaledResolution = new ScaledResolution(this.mc);
-        Draw.drawImg(new ResourceLocation("luma/mainmenu/background.jpg"), 0.0, 0.0, width, height);
-        //this.drawDefaultBackground();
+        this.drawDefaultBackground();
         this.accountList.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_);
         super.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_);
         if (this.loginThread != null) {

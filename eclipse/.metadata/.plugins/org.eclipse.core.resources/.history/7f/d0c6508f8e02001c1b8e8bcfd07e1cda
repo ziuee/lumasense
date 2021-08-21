@@ -6,14 +6,12 @@ import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.gui.alt.GuiAltManager;
 import me.luma.client.management.gui.alt.impl.Account;
 import me.luma.client.management.gui.alt.utils.Strings;
-import me.luma.client.management.utils.Draw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiSlot;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 
 public class GuiAccountList extends GuiSlot {
     public int selected = -1;
@@ -44,7 +42,6 @@ public class GuiAccountList extends GuiSlot {
     }
 
     protected void drawSlot(int i, int i1, int i2, int i3, int i4, int i5) {
-    	Draw.drawImg(new ResourceLocation("luma/mainmenu/background.jpg"), 0.0, 0.0, width, height);
         Account account = this.getAccount(i);
         Minecraft minecraft = Minecraft.getMinecraft();
         ScaledResolution scaledResolution = new ScaledResolution(minecraft);
