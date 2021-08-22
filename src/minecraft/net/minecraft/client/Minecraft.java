@@ -14,6 +14,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
+import me.luma.client.core.Luma;
 import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.event.impl.EventKey;
 import me.luma.client.management.event.impl.EventTick;
@@ -626,7 +627,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     private void createDisplay() throws LWJGLException
     {
         Display.setResizable(true);
-        Display.setTitle("Loading LumaSense | 1.8.8");
+        Display.setTitle("Loading Luma " + Luma.version);
 
         try
         {

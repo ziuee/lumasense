@@ -1,45 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="Collided"/>
+		<item key="selection" value="Loading Luma"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="Collided"/>
-			<item value="draw"/>
-			<item value="mc.fontRendererObj.drawCenteredString"/>
-			<item value="MainMenu"/>
-			<item value="30"/>
-			<item value="38"/>
-			<item value="getMc()"/>
-			<item value="renderingTarget"/>
+			<item value="Loading Luma"/>
+			<item value="ClientLoader"/>
+			<item value="getDiscord"/>
+			<item value="backg"/>
+			<item value="Zore.instance"/>
+			<item value="ClientLoader.INSTANCE.getFontManager().getDefaultFont().getWidth"/>
+			<item value="ClientLoader.INSTANCE.getFontManager().getDefaultFont().drawStringWithShadow"/>
 			<item value="Client"/>
-			<item value="Event3D"/>
-			<item value="gradient"/>
-			<item value="Client.DELTA_UTIL"/>
-			<item value=".playerInfoMap.values();"/>
-			<item value="getWorldTime"/>
-			<item value="setTime"/>
 		</list>
 		<list key="replacehistory">
+			<item value="ClientLoader.loaderInstance"/>
+			<item value="ClientLoader.instance"/>
+			<item value="ClientLoader.loaderInstance.fontManager.getFont(&quot;SFL 10&quot;).getWidth"/>
+			<item value="ClientLoader.loaderInstance.fontManager.getFont(&quot;SFL 10&quot;).drawStringWithShadow"/>
+			<item value="ClientLoader"/>
 			<item value="ClientLoader.loaderInstance.fontManager.getFont(&quot;SFL 10&quot;).drawCenteredString"/>
 			<item value="35"/>
 			<item value="43"/>
-			<item value="mc"/>
-			<item value="entityAttacked"/>
-			<item value="ClientLoader.loaderInstance"/>
-			<item value="ClientLoader.loaderInstance.DELTA_UTIL"/>
-			<item value="smooth.getBooleanValue()"/>
-			<item value=""/>
-			<item value="mc.theWorld"/>
-			<item value="mc.thePlayer"/>
-			<item value="place"/>
-			<item value="place(playerBlock U Do It XD"/>
-			<item value="place(playerBlock"/>
-			<item value="KillAura.entityAttacked"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

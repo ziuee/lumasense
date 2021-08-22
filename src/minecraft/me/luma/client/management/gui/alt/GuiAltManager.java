@@ -59,7 +59,7 @@ public class GuiAltManager extends GuiScreen {
 	
 	public void drawScreen(int p_drawScreen_1_, int p_drawScreen_2_, float p_drawScreen_3_) {
         ScaledResolution scaledResolution = new ScaledResolution(this.mc);
-        Draw.drawImg(new ResourceLocation("luma/mainmenu/background.jpg"), 0.0, 0.0, width, height);
+        //Draw.drawImg(new ResourceLocation("luma/mainmenu/background.jpg"), 0.0, 0.0, width, height);
         //this.drawDefaultBackground();
         this.accountList.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_);
         super.drawScreen(p_drawScreen_1_, p_drawScreen_2_, p_drawScreen_3_);

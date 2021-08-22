@@ -1,13 +1,15 @@
 applyBackground=false
 approved.defs.file.last.changed.time=1624986146000
+codetogether.announce.displayed=true
 configurationInstallLocation=/C\:/Users/remig/eclipse/java-2021-062/eclipse/
+ct.reengagement.display.after=1640505910159
 ct.upsell.display.after=1629560242780
 eclipse.preferences.version=1
 iconcolormode=primary
 iconreplacement=true
 includeThemingInOomph=false
-last.download.attempt.time=1629477929224
-lastConfiguration=1629551560087
+last.download.attempt.time=1629619398132
+lastConfiguration=1629619565876
 newinstall=false
 showWelcomeDialog=false
 workbench.theme=Dark Gray
