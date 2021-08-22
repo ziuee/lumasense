@@ -55,26 +55,26 @@ public class Hud extends GuiIngame {
 			if(HUD.arraylistBackground.getBooleanValue()) {
 				GlStateManager.resetColor();
 				//Gui.drawRect(sr.getScaledWidth() - 1, arrayoffset.get() + 3, sr.getScaledWidth(), arrayoffset.get() + 13, getRainbow(6000, counter[0] * 300));
-				Gui.drawRect(sr.getScaledWidth() - ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()) - 4, arrayoffset.get() + 2, sr.getScaledWidth() - 2, arrayoffset.get() + 13, Integer.MIN_VALUE);// WTF.. WHY IS WHITE? ._.
+				Gui.drawRect(sr.getScaledWidth() - HUD.arraylistX.getSliderValue().intValue() - ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()) - 4, arrayoffset.get() + 2 + HUD.arraylistY.getSliderValue().intValue(), sr.getScaledWidth() - 2 - HUD.arraylistX.getSliderValue().intValue(), arrayoffset.get() + 13 + HUD.arraylistY.getSliderValue().intValue(), Integer.MIN_VALUE);
 				if(HUD.rainbowArraylist.getBooleanValue()) {
-					Gui.drawRect(sr.getScaledWidth() - 2, arrayoffset.get() + 2, sr.getScaledWidth(), arrayoffset.get() + 13, getRainbow(6000, counter[0] * 300));
+					Gui.drawRect(sr.getScaledWidth() - 2 - HUD.arraylistX.getSliderValue().intValue(), arrayoffset.get() + 2 + HUD.arraylistY.getSliderValue().intValue(), sr.getScaledWidth() - HUD.arraylistX.getSliderValue().intValue(), arrayoffset.get() + 13 + HUD.arraylistY.getSliderValue().intValue(), getRainbow(6000, counter[0] * 300));
 				} 
 				if(!HUD.rainbowArraylist.getBooleanValue()) {
-					Gui.drawRect(sr.getScaledWidth() - 2, arrayoffset.get() + 2, sr.getScaledWidth(), arrayoffset.get() + 13, lumasense);
+					Gui.drawRect(sr.getScaledWidth() - 2 - HUD.arraylistX.getSliderValue().intValue(), arrayoffset.get() + 2 + HUD.arraylistY.getSliderValue().intValue(), sr.getScaledWidth() - HUD.arraylistX.getSliderValue().intValue(), arrayoffset.get() + 13 + HUD.arraylistY.getSliderValue().intValue(), lumasense);
 				}
 				//Gui.drawRect(sr.getScaledWidth() + ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), arrayoffset.get() - 3, sr.getScaledWidth() -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()) - 7, arrayoffset.get() + 10, new Color(0, 0, 255).getRGB());
 				GlStateManager.resetColor();
 				if(HUD.rainbowArraylist.getBooleanValue()) {
-					Gui.drawRect(sr.getScaledWidth() - 1, arrayoffset.get() + 3, sr.getScaledWidth(), arrayoffset.get() + 14, getRainbow(6000, counter[0] * 300));
-					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3, getRainbow(6000, counter[0] * 300));
+					//Gui.drawRect(sr.getScaledWidth() - 1, arrayoffset.get() + 3, sr.getScaledWidth(), arrayoffset.get() + 14, getRainbow(6000, counter[0] * 300));
+					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 - HUD.arraylistX.getSliderValue().intValue() -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3 + HUD.arraylistY.getSliderValue().intValue(), getRainbow(6000, counter[0] * 300));
 				} else {
-					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3, lumasense);
+					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 - HUD.arraylistX.getSliderValue().intValue() -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3 + HUD.arraylistY.getSliderValue().intValue(), lumasense);
 				}
 			} else {
 				if(HUD.rainbowArraylist.getBooleanValue()) {
-					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3, getRainbow(6000, counter[0] * 300));
+					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 - HUD.arraylistX.getSliderValue().intValue() -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3 + HUD.arraylistY.getSliderValue().intValue(), getRainbow(6000, counter[0] * 300));
 				} else {
-					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3, lumasense);
+					ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawString(module.getDisplayName(), sr.getScaledWidth() - 2.5 - HUD.arraylistX.getSliderValue().intValue() -ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getWidth(module.getDisplayName()), yDist[0] + 3 + HUD.arraylistY.getSliderValue().intValue(), lumasense);
 				}
 			}
 			yDist[0] += ClientLoader.loaderInstance.fontManager.getFont("SFL 10").getHeight(module.getDisplayName()) + 2;

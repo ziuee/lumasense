@@ -20,6 +20,9 @@ public class HUD extends Module {
 	
 	public static SettingSlider flow;
 	
+	public static SettingSlider arraylistX;
+	public static SettingSlider arraylistY;
+	
 	public static SettingBoolean rainbowArraylist;
 	
 	public static SettingBoolean arraylistBackground;
@@ -42,6 +45,9 @@ public class HUD extends Module {
 		rainbowSaturation = new SettingSlider("Rainbow Saturation", this, 1, 0.1, 1, false, true);
 		rainbowOffset = new SettingSlider("Rainbow Offset", this, 2, 1, 6, false, true);
 		rainbowSpeed = new SettingSlider("Rainbow Speed", this, 3, 1, 6, false, true);
+		
+		arraylistX = new SettingSlider("Arraylist X", this, 1, 1, 100, false, true);
+		arraylistY = new SettingSlider("Arraylist Y", this, 1, 1, 100, false, true);
 
 		//rainbowArraylist = new SettingBoolean("Rainbow", this, false);
 		

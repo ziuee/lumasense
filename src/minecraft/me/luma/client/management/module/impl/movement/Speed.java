@@ -100,7 +100,7 @@ public class Speed extends Module {
 	            collided = true;
 	        }
 	        if (collided) {
-	            mc.timer.timerSpeed = 1.3f;
+	            mc.timer.timerSpeed = 1.2f;
 	            stage = -1;
 	        }
 	        if (stair > 0)
@@ -344,7 +344,7 @@ public class Speed extends Module {
             //JUMP
             if (timer.delay(300)) {
                 timer.reset();
-                mc.timer.timerSpeed = 1.1f;
+                mc.timer.timerSpeed = 1.08f;
             }
             if (!lastCheck.delay(500)) {
                 if (!shouldslow)
