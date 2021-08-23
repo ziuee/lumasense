@@ -15,6 +15,7 @@ import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.item.ItemAppleGold;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
@@ -87,7 +88,7 @@ public class ChestStealer extends Module {
                 && ItemUtil.compareDamage(stack, ItemUtil.bestSword()) == stack) || stack.getItem() instanceof ItemBlock
                 || (stack.getItem() instanceof ItemPotion && !ItemUtil.isBadPotion(stack))
                 || stack.getItem() instanceof ItemArmor || stack.getItem() instanceof ItemAppleGold
-                || stack.getItem() instanceof ItemFood || stack.getItem() instanceof ItemSword);
+                || stack.getItem() instanceof ItemFood || stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemBow);
     }
 
     private boolean isChestEmpty(final GuiChest chest) {

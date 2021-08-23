@@ -285,7 +285,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.enableAlpha();
                 this.mainModel.setLivingAnimations(entity, f6, f5, partialTicks);
                 this.mainModel.setRotationAngles(f6, f5, f7, f2, f8, 0.0625F, entity);
-                boolean active = ClientLoader.loaderInstance.moduleManager.getModule("ESP").isToggled() && ESP.espModee.getArraListValue().equalsIgnoreCase("Outline") && ESP.outline.getBooleanValue();
+                boolean active = ClientLoader.loaderInstance.moduleManager.getModule("ESP").isToggled() && ESP.outline.getBooleanValue();
                 if (this.renderOutlines) {
                     boolean flag1 = this.setScoreTeamColor(entity);
                     this.renderModel(entity, f6, f5, f7, f2, f8, 0.0625F, true);

@@ -1,0 +1,43 @@
+package me.luma.client.management.module.impl.movement;
+
+import org.lwjgl.input.Keyboard;
+
+import me.luma.client.management.event.EventTarget;
+import me.luma.client.management.event.impl.EventUpdate;
+import me.luma.client.management.module.Category;
+import me.luma.client.management.module.Module;
+import net.minecraft.util.MovementInput;
+
+public class LongJump extends Module {
+	
+	private static float groundTicks;
+
+	public LongJump() {
+		super("LongJump", Keyboard.KEY_X, Category.MOVEMENT);
+	}
+	
+	@EventTarget
+	public void onUpdate(EventUpdate event) {
+		if(mc.thePlayer.onGround && (mc.gameSettings.keyBindRight.pressed || mc.gameSettings.keyBindLeft.pressed || mc.gameSettings.keyBindForward.pressed || mc.gameSettings.keyBindBack.pressed)) {
+			if(groundTicks > 0) {
+				groundTicks = 0;
+				this.toggle();
+				return;
+			}
+			groundTicks++;
+			mc.thePlayer.jump();
+		}
+	}
+
+	@Override
+	public void onEnable() {
+		super.onEnable();
+	}
+	
+	@Override
+	public void onDisable() {
+		super.onDisable();
+		mc.timer.timerSpeed = 1F;
+	}
+	
+}

@@ -14,6 +14,8 @@ import me.luma.client.hud.Hud;
 import me.luma.client.hud.notifications.NotificationManager;
 import me.luma.client.hud.screen.HUDManager;
 import me.luma.client.hud.screen.mods.ModInstances;
+import me.luma.client.management.command.CommandManager;
+import me.luma.client.management.command.utils.friend.FriendManager;
 import me.luma.client.management.config.ConfigManager;
 import me.luma.client.management.event.EventManager;
 import me.luma.client.management.event.EventTarget;
@@ -23,6 +25,7 @@ import me.luma.client.management.font.FontManager;
 import me.luma.client.management.gui.alt.impl.AccountManager;
 import me.luma.client.management.gui.alt.utils.Files;
 import me.luma.client.management.gui.alt.utils.Strings;
+import me.luma.client.management.module.Module;
 import me.luma.client.management.module.ModuleManager;
 import me.luma.client.management.utils.BetterColor;
 import me.luma.client.management.utils.DeltaUtil;
@@ -49,10 +52,12 @@ public class ClientLoader implements Registry {
 	public static ModuleManager moduleManager = new ModuleManager();
 	public NotificationManager notificationManager;
 	private DiscordRP discordRP = new DiscordRP();
+	public static CommandManager commandManager;
 	public static EventManager eventManager;
 	public static FontManager fontManager;
 	private AccountManager accountManager;
 	public ConfigManager configManager;
+	public FriendManager friendManager;
 	private HUDManager hudManager;
 	public static Hud hud;
 	
@@ -115,6 +120,8 @@ public class ClientLoader implements Registry {
 			moduleManager = new ModuleManager();
 			fontManager = new FontManager();
 			configManager = new ConfigManager();
+			commandManager = new CommandManager();
+			friendManager = new FriendManager();
 			
 			Display.setTitle("Luma " + Luma.version); // Change application title
 			eventManager.register(this);
@@ -155,4 +162,17 @@ public class ClientLoader implements Registry {
 	public static void addChatMessage(String s) {
         Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_GRAY + "[" + EnumChatFormatting.RED + "Luma" + EnumChatFormatting.DARK_GRAY + "] " + EnumChatFormatting.RESET + s));
     }
+
+	public static boolean onSendChatMessage(String s) {
+		if(s.startsWith(".")) {
+			commandManager.callCommand(s.substring(1));
+			return false;
+		}
+		for(Module mod : ClientLoader.loaderInstance.moduleManager.getModules()) {
+			if(mod.isToggled()) {
+				return mod.onSendChatMessage(s);
+			}
+		}
+		return true;
+	}
 }

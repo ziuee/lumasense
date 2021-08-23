@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import me.luma.client.core.registry.impl.ClientLoader;
+import me.luma.client.management.command.utils.friend.Friend;
 import me.luma.client.management.event.EventManager;
 import me.luma.client.management.event.EventTarget;
 import me.luma.client.management.event.impl.Event3D;
@@ -42,6 +43,7 @@ public class KillAura extends Module
     SettingBoolean Monsters;
     SettingBoolean Villagers;
     SettingBoolean Teams;
+    SettingBoolean Friends;
     SettingBoolean AfterDeath;
     SettingBoolean targetespthingyay69420;
     public static SettingSlider reach;
@@ -110,65 +112,6 @@ public class KillAura extends Module
     private boolean down;
     private double time;
     
-    @EventTarget
-    public void onRender(Event3D event) {
-    	//if (entityAttacked.getDistanceToEntity((Entity)KillAura.mc.thePlayer) <= KillAura.reach.getSliderValue()) {
-    		/*time += .01 * (ClientLoader.loaderInstance.DELTA_UTIL.deltaTime * .1);
-			final double height = 0.5 * (1 + Math.sin(2 * Math.PI * (time * .3)));
-
-			if (height > .995) {
-				down = true;
-			} else if (height < .01) {
-				down = false;
-			}
-
-			final double x = renderingTarget.posX + (renderingTarget.posX - renderingTarget.lastTickPosX) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosX;
-			final double y = renderingTarget.posY + (renderingTarget.posY - renderingTarget.lastTickPosY) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosY;
-			final double z = renderingTarget.posZ + (renderingTarget.posZ - renderingTarget.lastTickPosZ) * mc.timer.renderPartialTicks - mc.getRenderManager().renderPosZ;
-
-			GlStateManager.enableBlend();
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glEnable(GL11.GL_LINE_SMOOTH);
-			GlStateManager.disableDepth();
-			GlStateManager.disableTexture2D();
-			GlStateManager.disableAlpha();
-			GL11.glLineWidth(1.5F);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
-			GL11.glDisable(GL11.GL_CULL_FACE);
-			final double size = renderingTarget.width * 1.2;
-			final double yOffset = ((renderingTarget.height * (targetespthingyay69420.getBooleanValue() ? .5 : 1)) + .2) * height;
-			GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-			{
-				for (int j = 0; j < 361; j++) {
-					ClientLoader.loaderInstance.RENDER2D.color(ClientLoader.loaderInstance.getClientColor().setAlpha((int) (down ? 255 * height : 255 * (1 - height))));
-					GL11.glVertex3d(x + Math.cos(Math.toRadians(j)) * size, y + yOffset, z - Math.sin(Math.toRadians(j)) * size);
-					ClientLoader.loaderInstance.RENDER2D.color(ClientLoader.loaderInstance.getClientColor().setAlpha(0));
-					GL11.glVertex3d(x + Math.cos(Math.toRadians(j)) * size, y + yOffset + ((down ? -.5 * (1 - height) : .5 * height)), z - Math.sin(Math.toRadians(j)) * size);
-				}
-			}
-			GL11.glEnd();
-			GL11.glBegin(GL11.GL_LINE_LOOP);
-			{
-				for (int j = 0; j < 361; j++) {
-					ClientLoader.loaderInstance.RENDER2D.color(ClientLoader.loaderInstance.getClientColor());
-					GL11.glVertex3d(x + Math.cos(Math.toRadians(j)) * size, y + yOffset, z - Math.sin(Math.toRadians(j)) * size);
-				}
-			}
-			GL11.glEnd();
-			GlStateManager.enableAlpha();
-			GL11.glShadeModel(GL11.GL_FLAT);
-			GL11.glDisable(GL11.GL_LINE_SMOOTH);
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GlStateManager.enableTexture2D();
-			GlStateManager.enableDepth();
-			GlStateManager.disableBlend();
-			GlStateManager.resetColor();
-			return;*/
-    	//}
-    	time += (.01 + (renderingTarget.hurtTime * .005)) * (ClientLoader.loaderInstance.DELTA_UTIL.deltaTime * .1);
-		final Vec3 pos = renderingTarget.getPositionVector();
-    }
-    
     /*private boolean check(Entity e) {
     	 if (e.isInvisible()) {
              return this.Invisibles.getBooleanValue();
@@ -191,10 +134,12 @@ public class KillAura extends Module
          return true;
     }*/
     
+    
     private boolean check(final EntityLivingBase e) {
         if (e.isInvisible()) {
             return this.Invisibles.getBooleanValue();
         }
+        
         if (e instanceof EntityPlayer) {
             return this.Players.getBooleanValue();
         }

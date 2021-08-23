@@ -5,7 +5,9 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -15,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.util.glu.GLU;
 
+import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.event.EventTarget;
 import me.luma.client.management.event.impl.Event2D;
 import me.luma.client.management.event.impl.Event3D;
@@ -39,6 +42,8 @@ public class ESP extends Module {
 
 	private static Map<EntityPlayer, float[][]> entities = new HashMap<>();
 	
+	private final Map<EntityPlayer, float[][]> playerRotationMap = (Map)new WeakHashMap<>();
+	
 	private final FloatBuffer windowPosition = BufferUtils.createFloatBuffer(4);
     private final IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
     private final FloatBuffer modelMatrix = GLAllocation.createDirectFloatBuffer(16);
@@ -47,7 +52,12 @@ public class ESP extends Module {
     
     public static SettingArrayList espModee;
     
+    public static SettingBoolean tags;
+    public static SettingBoolean localPlayer;
+    public static SettingBoolean healthNumber;
+    
     public static SettingBoolean outline;
+    
     public static SettingBoolean skeleton;
     public static SettingBoolean box;
     
@@ -55,7 +65,6 @@ public class ESP extends Module {
     SettingBoolean healthBar;
     
     SettingBoolean nametagsCustom;
-    public static SettingBoolean nametags;
     
     SettingSlider nametagsSaturation;
     SettingSlider nametagsHue;
@@ -69,14 +78,9 @@ public class ESP extends Module {
     
 	public ESP() {
 		super("ESP", 0, Category.RENDER);
-		
-		ArrayList<String> espMode = new ArrayList<String>();
-		espMode.add("Outline");
-		espModee = new SettingArrayList("ESP Mode", this, espMode, "Blend");
-		
 		skeleton = new SettingBoolean("Skeleton", this, false);
 		outline = new SettingBoolean("Outline", this, false);
-		box = new SettingBoolean("2D Box", this, true);
+		box = new SettingBoolean("Box", this, true);
 		
 		healthBarCustom = new SettingBoolean("Custom Health Color", this, true);
 		healthBar = new SettingBoolean("Health Bar", this, true);
@@ -85,7 +89,7 @@ public class ESP extends Module {
 		healthBarHue = new SettingSlider("Health Hue", this, 0.6F, 0.0F, 1.0F, false, true);
 		
 		nametagsCustom = new SettingBoolean("Custom Name Color", this, true);
-		nametags = new SettingBoolean("NameTags", this, true);
+		tags = new SettingBoolean("NameTags", this, true);
 		
 		nametagsSaturation = new SettingSlider("NameTags Sat", this, 1.0F, 0.0F, 1.0F, false, true);
 		nametagsHue = new SettingSlider("NameTags Hue", this, 0.6F, 0.0F, 1.0F, false, true);
@@ -129,14 +133,12 @@ public class ESP extends Module {
                     endScissorBox();
             }
             
-            if(nametags.getBooleanValue()) {
-            	String text = player.getDisplayName().getUnformattedText();
+            if(tags.getBooleanValue()) {
+            	String text = player.getDisplayName().getUnformattedText(); // Get username of player
                 float xDif = x2 - x;
                 float minScale = 0.65F;
-                float scale = Math.max(minScale,
-                        Math.min(1.0F, 1.0F - (mc.thePlayer.getDistanceToEntity(player) / 100.0F)));
-                float yOff = Math.max(0.0F,
-                        Math.min(1.0F, mc.thePlayer.getDistanceToEntity(player) / 12.0F));
+                float scale = Math.max(minScale, Math.min(1.0F, 1.0F - (mc.thePlayer.getDistanceToEntity(player) / 100.0F)));
+                float yOff = Math.max(0.0F, Math.min(1.0F, mc.thePlayer.getDistanceToEntity(player) / 12.0F));
                 float upscale = 1.0F / scale;
                 GL11.glPushMatrix();
                 GL11.glScalef(scale, scale, scale);
@@ -144,9 +146,11 @@ public class ESP extends Module {
                 	String text2 = EnumChatFormatting.getTextWithoutFormattingCodes(player.getDisplayName().getUnformattedText());
                     float sat = nametagsSaturation.getSliderValue().floatValue();
                     Color c = Color.getHSBColor(nametagsHue.getSliderValue().floatValue(), sat, 1.0F);
-                    mc.fontRendererObj.drawStringWithShadow(text2, (x + xDif / 2.0F) * upscale - mc.fontRendererObj.getStringWidth(text) / 2.0F, (y - 9 + yOff) * upscale, c.getRGB());
+                    ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawStringWithShadow(text2, (x + xDif / 2.0F) * upscale - mc.fontRendererObj.getStringWidth(text) / 2.0F, (y - 9 + yOff) * upscale, c.getRGB());
+                    //mc.fontRendererObj.drawStringWithShadow(text2, (x + xDif / 2.0F) * upscale - mc.fontRendererObj.getStringWidth(text) / 2.0F, (y - 9 + yOff) * upscale, c.getRGB());
                 } else {
-                	mc.fontRendererObj.drawStringWithShadow(text, (x + xDif / 2.0F) * upscale - mc.fontRendererObj.getStringWidth(text) / 2.0F, (y - 9 + yOff) * upscale, -1);
+                	ClientLoader.loaderInstance.fontManager.getFont("SFL 10").drawStringWithShadow(text, (x + xDif / 2.0F) * upscale - mc.fontRendererObj.getStringWidth(text) / 2.0F, (y - 9 + yOff) * upscale, -1);
+                	//mc.fontRendererObj.drawStringWithShadow(text, (x + xDif / 2.0F) * upscale - mc.fontRendererObj.getStringWidth(text) / 2.0F, (y - 9 + yOff) * upscale, -1);
                 }
                 GL11.glScalef(1.0F, 1.0F, 1.0F);
             	GL11.glPopMatrix();
@@ -155,9 +159,7 @@ public class ESP extends Module {
             	GL11.glDisable(GL11.GL_TEXTURE_2D);
                 enableAlpha();
                 GL11.glLineWidth(1.3F);
-                GL11.glColor4f(colorRed.getSliderValue().floatValue() / 255F,
-                        colorGreen.getSliderValue().floatValue() / 255F,
-                        colorBlue.getSliderValue().floatValue() / 255F, 1.0F);
+                GL11.glColor4f(colorRed.getSliderValue().floatValue() / 255F, colorGreen.getSliderValue().floatValue() / 255F, colorBlue.getSliderValue().floatValue() / 255F, 1.0F);
                 GL11.glBegin(GL11.GL_LINE_LOOP);
                 GL11.glVertex2f(x, y);
                 GL11.glVertex2f(x, y2);
@@ -177,7 +179,7 @@ public class ESP extends Module {
 		entities.keySet().removeIf(player -> !mc.theWorld.playerEntities.contains(player));
         if (!entityPosMap.isEmpty())
             entityPosMap.clear();
-        if(box.getBooleanValue() || healthBar.getBooleanValue() || nametags.getBooleanValue()) {
+        if(box.getBooleanValue() || healthBar.getBooleanValue() || tags.getBooleanValue()) {
         	int scaleFactor = scaledResolution.getScaleFactor();
             float partialTicks = event.getPartialTicks();
             for (EntityPlayer player : mc.theWorld.playerEntities) {
@@ -210,18 +212,14 @@ public class ESP extends Module {
             }
         }
         if(skeleton.getBooleanValue()) {
-        	this.startEnd(true);
-            GL11.glEnable(2903);
-            GL11.glDisable(2848);
-            for (EntityPlayer ent : mc.theWorld.playerEntities) {
-                if (ent.getDistanceToEntity(mc.thePlayer) < 1.0F)
-                    continue;
-                drawSkeleton(event, ent);
-            }
-            this.startEnd(false);
+        	//setupRender(true);
+        	GL11.glEnable(2903);
+        	GL11.glDisable(2848);
+        	//this.pl
         }
 	}
 	
+	/*@EventTarget
 	private void drawSkeleton(Event3D event, final EntityPlayer e) {
         final Color color = new Color(
                 e.getName().equalsIgnoreCase(mc.thePlayer.getName()) ? -6684775 : new Color(16775672).getRGB());
@@ -376,7 +374,7 @@ public class ESP extends Module {
             GlStateManager.popMatrix();
         }
         GlStateManager.depthMask(!revert);
-    }
+    }*/
 
     private Vec3 getVec3(final EntityPlayer var0) {
         final float timer = mc.timer.renderPartialTicks;

@@ -100,12 +100,24 @@ public class Module implements Serializable {
 	}
 	
 	public void setToggled(boolean toggle) {
-		//this.toggle();
-		this.toggleLagBack();
+		this.toggle();
+		//this.toggleLagBack();
 		if (toggle) {
 			this.onEnable();
 			this.toggled = true;
 		} else {
+			this.onDisable();
+			this.toggled = false;
+		}
+	}
+	
+	public void setToggled(Module module, boolean toggle) {
+		this.toggle();
+		//this.toggleLagBack();
+		if (toggle && module.isToggled()) {
+			this.onEnable();
+			this.toggled = true;
+		} else if(!module.isToggled() && !toggle) {
 			this.onDisable();
 			this.toggled = false;
 		}

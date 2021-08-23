@@ -1,0 +1,13 @@
+package me.luma.client.management.command.utils.friend;
+
+import java.util.*;
+
+public class FriendManager {
+	
+	private final static List<Friend> friends = new ArrayList<>();
+	
+	public void add(String name) {
+		add(name, name)
+	}
+
+}

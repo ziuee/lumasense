@@ -44,7 +44,7 @@ public class MoveUtils {
     }
 	
 	public final static void doStrafe(double speed) {
-        if(!isMoving())  return;
+        if(!isMoving()) return;
 
         final double yaw = getYaw(true);
         Minecraft.getMinecraft().thePlayer.motionX = -Math.sin(yaw) * speed;

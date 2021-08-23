@@ -1,0 +1,5 @@
+package me.luma.client.management.command;
+
+public class Command {
+
+}

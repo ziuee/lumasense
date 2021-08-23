@@ -1,0 +1,45 @@
+package me.luma.client.management.command;
+
+import java.util.ArrayList;
+
+import me.luma.client.core.registry.impl.ClientLoader;
+
+public class CommandManager {
+
+	private static ArrayList<Command> cmds;
+	
+	public CommandManager() {
+		
+		/*
+		 * Register commands
+		 */
+		
+	}
+	
+	public void callCommand(String input) {
+		String[] split = input.split(" ");
+		String command = split[0];
+		String args = input.substring(command.length()).trim();
+		for(Command c : getCommands()) {
+			if(c.getAlias().equalsIgnoreCase(command)) {
+				try {
+					c.executeCommand(args, args.split(" "));
+				} catch(Exception e) {
+					ClientLoader.addChatMessage("Invalid usage");
+					ClientLoader.addChatMessage(c.getSyntax());
+				}
+				return;
+			}
+		}
+		ClientLoader.addChatMessage("Command not found");
+	}
+	
+	public static void addCMD(Command cmd) {
+		cmds.add(cmd);
+	}
+	
+	public static ArrayList<Command> getCommands() {
+		return cmds;
+	}
+	
+}
