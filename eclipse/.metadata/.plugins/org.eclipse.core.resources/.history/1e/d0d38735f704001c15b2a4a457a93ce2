@@ -1,0 +1,108 @@
+package me.luma.client.management.module.impl.exploits;
+
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import me.luma.client.hud.notifications.NotificationManager;
+import me.luma.client.hud.notifications.NotificationType;
+import me.luma.client.management.event.EventTarget;
+import me.luma.client.management.event.impl.EventReceivePacket;
+import me.luma.client.management.event.impl.EventSendPacket;
+import me.luma.client.management.event.impl.EventUpdate;
+import me.luma.client.management.module.Category;
+import me.luma.client.management.module.Module;
+import me.luma.client.management.utils.MoveUtils;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+
+public class Disabler extends Module {
+
+	private static final int VERUS_DISABLE_AUTOBAN_CHANNEL = 65536;
+	private static final short VERUS_DISABLE_AUTOBAN_UID = 32767;
+	boolean watchdog = false;
+	
+	public Disabler() {
+		super("Disabler", 0, Category.EXPLOITS);
+	}
+	
+    private static final CopyOnWriteArrayList<C0FPacketConfirmTransaction> bypassList = new  CopyOnWriteArrayList<>();
+	private int current;
+	
+	public void onUpdate(EventUpdate event) {
+		if (!watchdog) {
+            if (MoveUtils.isOnGround(0.001) && mc.thePlayer.isCollidedVertically) {
+                double x = mc.thePlayer.posX;
+                double y = mc.thePlayer.posY;
+                double z = mc.thePlayer.posZ;
+                mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, true));
+                mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.16, z, true));
+                mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.07, z, true));
+                watchdog = true;
+                NotificationManager.show(NotificationType.INFO, "Disabler", "Wait 5s.", 5);
+            }
+        } else {
+            mc.thePlayer.motionX = 0;
+            mc.thePlayer.motionY = 0;
+            mc.thePlayer.motionZ = 0;
+            mc.thePlayer.jumpMovementFactor = 0;
+            mc.thePlayer.noClip = true;
+            mc.thePlayer.onGround = false;
+        }
+	}
+		
+	@EventTarget
+	public void onSendPacket(EventSendPacket event) {
+		Packet packet = event.getPacket();
+		if (packet instanceof C03PacketPlayer) {
+            if (watchdog) {
+                event.setCancelled(true);
+            }
+        }
+        if (packet instanceof S08PacketPlayerPosLook) {
+            S08PacketPlayerPosLook pac = (S08PacketPlayerPosLook) event.getPacket();
+            pac.yaw = mc.thePlayer.rotationYaw;
+            pac.pitch = mc.thePlayer.rotationPitch;
+            if (watchdog) {
+            	NotificationManager.show(NotificationType.INFO, "Disabler", "Watchdog disabled for 5s.", 5);;
+                this.toggle();
+            }
+        }
+	}
+	
+	@EventTarget
+	public void onReceivePacket(EventReceivePacket event) {
+		Packet packet = event.getPacket();
+        if (packet instanceof S08PacketPlayerPosLook) {
+            S08PacketPlayerPosLook pac = (S08PacketPlayerPosLook) event.getPacket();
+            pac.yaw = mc.thePlayer.rotationYaw;
+            pac.pitch = mc.thePlayer.rotationPitch;
+            if (watchdog) {
+            	NotificationManager.show(NotificationType.INFO, "Disabler", "Watchdog disabled for 5s.", 5);;
+                this.toggle();
+            }
+        }
+	}
+	
+	@Override
+	public void onEnable() {
+		if (MoveUtils.isOnGround(0.001) && mc.thePlayer.isCollidedVertically) {
+            double x = mc.thePlayer.posX;
+            double y = mc.thePlayer.posY;
+            double z = mc.thePlayer.posZ;
+            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.16, z, true));
+            mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.07, z, true));
+            watchdog = true;
+            NotificationManager.show(NotificationType.INFO, "Disabler", "Wait 5s.", 5);
+        } else {
+            watchdog = false;
+        }
+		super.onEnable();
+	}
+	
+	@Override
+	public void onDisable() {
+		super.onDisable();
+	}
+
+}

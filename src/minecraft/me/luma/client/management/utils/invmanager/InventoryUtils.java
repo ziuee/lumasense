@@ -32,7 +32,7 @@ public class InventoryUtils {
 		if (itemStack.getDisplayName().startsWith("§a")) {
 			return true;
 	    } else {
-	        return (itemStack.getItem() instanceof ItemArmor && InvManager.keepArmor.getBooleanValue()) || itemStack.getItem() instanceof ItemSword || (itemStack.getItem() instanceof ItemTool && InvManager.keepTools.getBooleanValue()) || (itemStack.getItem() instanceof ItemFood && InvManager.keepFood.getBooleanValue()) || (itemStack.getItem() instanceof ItemPotion && !isBadPotion(itemStack) && InvManager.keepPotions.getBooleanValue()) || itemStack.getItem() instanceof ItemBow|| itemStack.getItem() instanceof ItemBlock || itemStack.getDisplayName().contains("Play") || itemStack.getDisplayName().contains("Game") || itemStack.getDisplayName().contains("Right Click");
+	        return (itemStack.getItem() instanceof ItemArmor && InvManager.keepArmor.getBooleanValue()) || itemStack.getItem().getUnlocalizedName().contains("arrow") || itemStack.getItem() instanceof ItemSword || (itemStack.getItem() instanceof ItemTool && InvManager.keepTools.getBooleanValue()) || (itemStack.getItem() instanceof ItemFood && InvManager.keepFood.getBooleanValue()) || (itemStack.getItem() instanceof ItemPotion && !isBadPotion(itemStack) && InvManager.keepPotions.getBooleanValue()) || itemStack.getItem() instanceof ItemBow|| itemStack.getItem() instanceof ItemBlock || itemStack.getDisplayName().contains("Play") || itemStack.getDisplayName().contains("Game") || itemStack.getDisplayName().contains("Right Click");
 	    }
 	}
 	

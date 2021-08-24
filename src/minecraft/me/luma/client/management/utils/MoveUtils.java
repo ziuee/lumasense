@@ -1,10 +1,17 @@
 package me.luma.client.management.utils;
 
+import org.lwjgl.input.Keyboard;
+
 import me.luma.client.management.event.impl.EventMove;
+import me.luma.client.management.module.impl.combat.KillAura;
+import me.luma.client.management.module.impl.combat.TargetStrafe;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 
@@ -51,6 +58,33 @@ public class MoveUtils {
         Minecraft.getMinecraft().thePlayer.motionZ = Math.cos(yaw) * speed;
     }
 	
+	public static void setSpeed(final EventMove e, double speed) {
+        final EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+        if (player.isMoving()) {
+	        setSpeed(e, speed, player.moveForward, player.moveStrafing, player.rotationYaw);
+        }
+    }
+
+	public static void setSpeed(final EventMove e, double speed, float forward, float strafing, float yaw) {
+        boolean reversed = forward < 0.0f;
+        float strafingYaw = 90.0f *
+                (forward > 0.0f ? 0.5f : reversed ? -0.5f : 1.0f);
+
+        if (reversed)
+            yaw += 180.0f;
+        if (strafing > 0.0f)
+            yaw -= strafingYaw;
+        else if (strafing < 0.0f)
+            yaw += strafingYaw;
+
+        double x = Math.cos(Math.toRadians(yaw + 90.0f));
+        double z = Math.cos(Math.toRadians(yaw));
+
+        e.setX(x * speed);
+        e.setZ(z * speed);
+    }
+
+	
 	public final static double getYaw(boolean strafing) {
         float rotationYaw = strafing ? Minecraft.getMinecraft().thePlayer.rotationYawHead : Minecraft.getMinecraft().thePlayer.rotationYaw;
         float forward = 1F;
@@ -78,6 +112,15 @@ public class MoveUtils {
         return Math.toRadians(rotationYaw);
     }
 	
+	public static double getSpeed() {
+		double defaultSpeed = 0.2873;
+		if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.moveSpeed)) {
+			defaultSpeed *= 1.0 + 0.2 * (Minecraft.getMinecraft().thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1);
+		}
+		return defaultSpeed;
+	}
+
+	
 	public static void setMoveSpeed(EventMove eventMotion, double speed, String mode) {
 		
 		double f = Minecraft.getMinecraft().thePlayer.movementInput.moveForward;
@@ -101,6 +144,16 @@ public class MoveUtils {
 		Minecraft.getMinecraft().thePlayer.motionX = f * speed * Math.cos(Math.toRadians(playerYaw + 90)) + s * speed * Math.sin(Math.toRadians(playerYaw + 90));
 		Minecraft.getMinecraft().thePlayer.motionZ = f * speed * Math.sin(Math.toRadians(playerYaw + 90)) - s * speed * Math.cos(Math.toRadians(playerYaw + 90));
 	}
+	
+	public static double getJumpBoostModifier(double baseJumpHeight) {
+        if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.jump)) {
+            int amplifier = Minecraft.getMinecraft().thePlayer.getActivePotionEffect(Potion.jump).getAmplifier();
+            baseJumpHeight += (double) ((float) (amplifier + 1) * 0.1F);
+        }
+
+        return baseJumpHeight;
+    }
+
 	
 	public static void setMotion(EventMove e, final double speed) {
         double forward = Minecraft.getMinecraft().thePlayer.movementInput.moveForward;
@@ -148,6 +201,10 @@ public class MoveUtils {
 	    } 
 	    return false;
 	  }
+	
+	public static Block getBlockUnderPlayer(EntityPlayer inPlayer, double height) {
+		return Minecraft.getMinecraft().theWorld.getBlockState(new BlockPos(inPlayer.posX, inPlayer.posY - height, inPlayer.posZ)).getBlock();
+	}
 	
 	public static int getSpeedEffect() {
         if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.moveSpeed)) {

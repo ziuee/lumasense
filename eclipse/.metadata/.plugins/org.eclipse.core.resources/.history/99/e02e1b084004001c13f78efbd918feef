@@ -1,0 +1,11 @@
+package net.minecraft.item;
+
+import net.minecraft.creativetab.CreativeTabs;
+
+public class ItemArrow extends Item {
+	
+	public ItemArrow() {
+		this.setCreativeTab(CreativeTabs.tabCombat);
+	}
+
+}

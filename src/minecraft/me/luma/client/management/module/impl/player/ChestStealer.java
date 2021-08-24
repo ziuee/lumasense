@@ -88,7 +88,7 @@ public class ChestStealer extends Module {
                 && ItemUtil.compareDamage(stack, ItemUtil.bestSword()) == stack) || stack.getItem() instanceof ItemBlock
                 || (stack.getItem() instanceof ItemPotion && !ItemUtil.isBadPotion(stack))
                 || stack.getItem() instanceof ItemArmor || stack.getItem() instanceof ItemAppleGold
-                || stack.getItem() instanceof ItemFood || stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemBow);
+                || stack.getItem() instanceof ItemFood || stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemBow || stack.getItem().getUnlocalizedName().contains("arrow"));
     }
 
     private boolean isChestEmpty(final GuiChest chest) {

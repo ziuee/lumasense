@@ -42,7 +42,7 @@ public class AutoPot extends Module {
 						
 						if(isStackSplashHealthPot(stack)) {
 							final int oldslot = mc.thePlayer.inventory.currentItem;
-							mc.getNetHandler().addToSendQueueNoEvent(new C09PacketHeldItemChange(index - 36));
+							mc.getNetHandler().addToSendQueueSilent(new C09PacketHeldItemChange(index - 36));
 							mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer.C06PacketPlayerPosLook(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, event.getYaw(), 87, mc.thePlayer.onGround));
                             mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, stack, 0, 0, 0));
                             mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(oldslot));

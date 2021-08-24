@@ -10,7 +10,7 @@ public class NetUtil {
     }
 	
 	public static void setPacketNoEvent(Packet p) {
-		Minecraft.getMinecraft().getNetHandler().addToSendQueueNoEvent(p);
+		Minecraft.getMinecraft().getNetHandler().addToSendQueueSilent(p);
 	}
 	
 }

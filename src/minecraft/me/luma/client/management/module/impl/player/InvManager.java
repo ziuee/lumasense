@@ -69,84 +69,84 @@ public class InvManager extends Module {
 	   private int bestSwordSlot;
 
 
-	   @EventTarget
-	   public void onPreMotion(EventUpdate event) {
-	    	   if ((mc.currentScreen == null || mc.currentScreen instanceof GuiInventory)) {
-	    		   this.collectItems();
-	    		   this.collectBestArmor();
-	    		   this.collectTrash();
-	    		   int trashSize = this.trash.size();
-	    	   	   boolean trashPresent = trashSize > 0;
-	    	   	   EntityPlayerSP player = mc.thePlayer;
-	    	   	   int windowId = player.openContainer.windowId;
-	    	   	   int bestSwordSlot = this.bestSwordSlot;
-	    	   	   if (trashPresent) {
-	    	   		   if (!this.cleaning) {
-	    	   			   this.cleaning = true;
-	    	   			   player.sendQueue.addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
-	    	   		   }
+	@EventTarget
+	public void onPreMotion(EventUpdate event) {
+		if ((mc.currentScreen == null || mc.currentScreen instanceof GuiInventory)) {
+			this.collectItems();
+			this.collectBestArmor();
+			this.collectTrash();
+			int trashSize = this.trash.size();
+    	    boolean trashPresent = trashSize > 0;
+    	    EntityPlayerSP player = mc.thePlayer;
+    	    int windowId = player.openContainer.windowId;
+    	    int bestSwordSlot = this.bestSwordSlot;
+    	    if (trashPresent) {
+    	    	if (!this.cleaning) {
+    	    		this.cleaning = true;
+    	   			player.sendQueue.addToSendQueue(new C16PacketClientStatus(C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT));
+    	   		}
 	    	   		   
-	    	   	   for(int i = 0; i < trashSize; ++i) {
-	    	   		   int slot = (Integer)this.trash.get(i);
-	    	   		   if (this.checkDelay()) {
-	    	   			   break;
-	    	   		   }
-	    	   		   mc.playerController.windowClick(windowId, slot < 9 ? slot + 36 : slot, 1, 4, player);
-	    	   		   INV_STOPWATCH.reset();
-	    	   	   }
+    	   	    for(int i = 0; i < trashSize; ++i) {
+    	   			int slot = (Integer)this.trash.get(i);
+    	   		    if (this.checkDelay()) {
+    	   		    	break;
+    	   		    }
+    	   		    mc.playerController.windowClick(windowId, slot < 9 ? slot + 36 : slot, 1, 4, player);
+    	   		    INV_STOPWATCH.reset();
+    	   	    }
 
-		           if (this.cleaning) {
-		        	   player.sendQueue.addToSendQueue(new C0DPacketCloseWindow(windowId));
-		               this.cleaning = false;
-		            }
-		         }
+    	   	    if (this.cleaning) {
+    	   	    	player.sendQueue.addToSendQueue(new C0DPacketCloseWindow(windowId));
+    	   	    	this.cleaning = false;
+    	   	    }
+    	    }
 	
 		         if (bestSwordSlot != -1 && !this.checkDelay()) {
-		            mc.playerController.windowClick(windowId, bestSwordSlot < 9 ? bestSwordSlot + 36 : bestSwordSlot, (swordSlot.getSliderValue().intValue() - 1), 2, player);
+		         	mc.playerController.windowClick(windowId, bestSwordSlot < 9 ? bestSwordSlot + 36 : bestSwordSlot, (swordSlot.getSliderValue().intValue() - 1), 2, player);
 		            INV_STOPWATCH.reset();
 		         }
 		         if(autoArmor.getBooleanValue()) {
-			          	int[] bestArmorSlot = { -1, -1, -1, -1 };
-			          	int[] bestArmorAmount = { -1, -1, -1, -1 };
+			     	int[] bestArmorSlot = { -1, -1, -1, -1 };
+			        int[] bestArmorAmount = { -1, -1, -1, -1 };
 		
-			          	if (autoArmorTimer.hasElapsed((long) (armorSpeed.getSliderValue().longValue()))) {
-			          		for (int i = 0; i < 36; i++) {
-			          			ItemStack itemstack = mc.thePlayer.inventory.getStackInSlot(i);
-			          			if (itemstack != null && itemstack.getItem() instanceof ItemArmor) {
-			          				ItemArmor armor = (ItemArmor)itemstack.getItem();
-			          				if (armor.damageReduceAmount > bestArmorAmount[armor.armorType]) {
-			          					bestArmorAmount[armor.armorType] = armor.damageReduceAmount;
-			          					bestArmorSlot[armor.armorType] = i;
-			          				}
-			          			}
-			          		}
-		
-			          		for (int i = 0; i < 4; i++) {
-			          			ItemArmor bestArmor, currentArmor; ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(3 - i);
-		
-			          			if (itemstack != null && itemstack.getItem() instanceof ItemArmor) {
-			          				currentArmor = (ItemArmor)itemstack.getItem();
-			          			} else {
-			          				currentArmor = null;
-			          			}
-		
-			          			try {
-			          				bestArmor = (ItemArmor)mc.thePlayer.inventory.getStackInSlot(bestArmorSlot[i]).getItem();
-			          			} catch (Exception e) {
-			          				bestArmor = null;
-			          			}
-		
-			          			if (bestArmor != null && (currentArmor == null || bestArmor.damageReduceAmount > currentArmor.damageReduceAmount)) {
-			          				mc.playerController.windowClick(0, (bestArmorSlot[i] < 9) ? (36 + bestArmorSlot[i]) : bestArmorSlot[i], 0, 0, mc.thePlayer);
-			          				mc.playerController.windowClick(0, 5 + i, 0, 0, mc.thePlayer);
-			          				mc.playerController.windowClick(0, (bestArmorSlot[i] < 9) ? (36 + bestArmorSlot[i]) : bestArmorSlot[i], 0, 0, mc.thePlayer);
-			          				autoArmorTimer.reset();
-			                		return;
+		          	if (autoArmorTimer.hasElapsed((long) (armorSpeed.getSliderValue().longValue()))) {
+		          		for (int i = 0; i < 36; i++) {
+		          			ItemStack itemstack = mc.thePlayer.inventory.getStackInSlot(i);
+		          			if (itemstack != null && itemstack.getItem() instanceof ItemArmor) {
+		          				ItemArmor armor = (ItemArmor)itemstack.getItem();
+		          				if (armor.damageReduceAmount > bestArmorAmount[armor.armorType]) {
+		          					bestArmorAmount[armor.armorType] = armor.damageReduceAmount;
+		          					bestArmorSlot[armor.armorType] = i;
 		          				}
 		          			}
 		          		}
-	         		}
-	       		}
+	
+		          		for (int i = 0; i < 4; i++) {
+		          			ItemArmor bestArmor, currentArmor; ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(3 - i);
+	
+		          			if (itemstack != null && itemstack.getItem() instanceof ItemArmor) {
+		          				currentArmor = (ItemArmor)itemstack.getItem();
+		          			} else {
+		          				currentArmor = null;
+		          			}
+	
+		          			try {
+		          				bestArmor = (ItemArmor)mc.thePlayer.inventory.getStackInSlot(bestArmorSlot[i]).getItem();
+		          			} catch (Exception e) {
+		          				bestArmor = null;
+		          			}
+	
+		          			if (bestArmor != null && (currentArmor == null || bestArmor.damageReduceAmount > currentArmor.damageReduceAmount)) {
+		          				mc.playerController.windowClick(0, (bestArmorSlot[i] < 9) ? (36 + bestArmorSlot[i]) : bestArmorSlot[i], 0, 0, mc.thePlayer);
+		          				mc.playerController.windowClick(0, 5 + i, 0, 0, mc.thePlayer);
+		          				mc.playerController.windowClick(0, (bestArmorSlot[i] < 9) ? (36 + bestArmorSlot[i]) : bestArmorSlot[i], 0, 0, mc.thePlayer);
+		          				autoArmorTimer.reset();
+		                		return;
+	          				}
+	          			}
+	          		}
+         		}
+       		}
 	   }
 
 	   private boolean checkDelay() {

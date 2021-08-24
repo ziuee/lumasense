@@ -20,7 +20,7 @@ public class NoFall extends Module {
 	public void onUpdate(EventUpdate event) {
 		if (mc.thePlayer.fallDistance > 5.0F && !ClientLoader.loaderInstance.moduleManager.getModule("Fly").isToggled()) {
             mc.timer.timerSpeed = 0.25F;
-			mc.getNetHandler().addToSendQueueNoEvent(new C03PacketPlayer(true));
+			mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer(true));
             mc.thePlayer.fallDistance = 0.0F;
          }
 	}

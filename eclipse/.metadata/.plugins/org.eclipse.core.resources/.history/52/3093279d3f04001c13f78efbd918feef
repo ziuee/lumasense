@@ -1,0 +1,5 @@
+package net.minecraft.entity.projectile;
+
+public class EntityTippedArrow {
+
+}

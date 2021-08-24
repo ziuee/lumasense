@@ -1,8 +1,8 @@
 {
   "lastalt": {
-    "email": "mattesalvai1997@gmail.com",
-    "password": "Matteo.97",
-    "name": "matteosalvai97",
+    "email": "lordzerkal@gmail.com",
+    "password": "Wildchild1992",
+    "name": "Zerkal92",
     "banned": false
   },
   "accounts": [
@@ -28,6 +28,12 @@
       "email": "mattesalvai1997@gmail.com",
       "password": "Matteo.97",
       "name": "matteosalvai97",
+      "banned": false
+    },
+    {
+      "email": "lordzerkal@gmail.com",
+      "password": "Wildchild1992",
+      "name": "Zerkal92",
       "banned": false
     }
   ]

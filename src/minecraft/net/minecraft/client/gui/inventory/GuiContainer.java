@@ -12,8 +12,9 @@ import com.google.common.collect.Sets;
 
 import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.module.Module;
-import me.luma.client.management.utils.animations.AnimationUtil;
-import me.luma.client.management.utils.animations.easings.Quint;
+import me.luma.client.management.utils.animations.animation2.AnimationUtils;
+import me.luma.client.management.utils.animations.oldanim.AnimationUtil;
+import me.luma.client.management.utils.animations.oldanim.easings.Quint;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -94,6 +95,7 @@ public abstract class GuiContainer extends GuiScreen
     
     AnimationUtil animUtil;
 
+    double scalingAnim;
     double scaling;
     
     /**
@@ -119,9 +121,10 @@ public abstract class GuiContainer extends GuiScreen
     
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-    	scaling = animUtil.easeOut(0, 6, 10, 1.5);
+    	//scaling = animUtil.easeOut(0, 6, 10, 1.5);
+    	scalingAnim = AnimationUtils.animate(50, scalingAnim, 0.11529999852180481D);
     	scaling = MathHelper.clamp_double(scaling, 0, 1);
-    	this.drawDefaultBackground();
+    	this.drawDefaultBackgroundAnim();
     	ClientLoader.loaderInstance.RENDER2D.gradient(0, 0, this.width, this.height, ClientLoader.loaderInstance.getClientColor().setAlpha((int) (20 * scaling)), new java.awt.Color(255, 255, 255, (int) (50 * scaling)));
         int i = this.guiLeft;
         int j = this.guiTop;
@@ -130,15 +133,15 @@ public abstract class GuiContainer extends GuiScreen
         GlStateManager.disableLighting();
         GlStateManager.enableDepth();
         GL11.glPushMatrix();
-        ClientLoader.loaderInstance.RENDER2D.translate(width / 2, height / 2);
-        ClientLoader.loaderInstance.RENDER2D.scale(scaling, scaling);
-        ClientLoader.loaderInstance.RENDER2D.translate(-width / 2, -height / 2);
+        //ClientLoader.loaderInstance.RENDER2D.translate(width / 2, height / 2);
+        //ClientLoader.loaderInstance.RENDER2D.scale(scaling, scaling);
+        //ClientLoader.loaderInstance.RENDER2D.translate(-width / 2, -height / 2);
         GL11.glPopMatrix();
         this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         super.drawScreen(mouseX, mouseY, partialTicks);
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.pushMatrix();
-        GlStateManager.translate((float)i, (float)j, 0.0F);
+        GlStateManager.translate((float)i, (float)j + 50 - scalingAnim, 0.0F);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         this.theSlot = null;

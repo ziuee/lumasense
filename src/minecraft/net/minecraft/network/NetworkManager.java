@@ -27,6 +27,7 @@ import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.management.event.impl.EventReceivePacket;
 import me.luma.client.management.event.impl.EventSendPacket;
 
@@ -138,7 +139,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		this.closeChannel(chatcomponenttranslation);
 	}
 
-	protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
+	/*protected void channelRead0(ChannelHandlerContext p_channelRead0_1_, Packet p_channelRead0_2_) throws Exception {
 		EventReceivePacket eventReceivePacket = new EventReceivePacket(p_channelRead0_2_);
 		eventReceivePacket.call();
 
@@ -153,7 +154,21 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 				;
 			}
 		}
-	}
+	}*/
+	
+	protected void channelRead0(final ChannelHandlerContext p_channelRead0_1_, final Packet p_channelRead0_2_) throws Exception {
+        final EventReceivePacket eventReceivePacket = new EventReceivePacket(p_channelRead0_2_);
+        eventReceivePacket.call();
+        if (eventReceivePacket.isCancelled()) {
+            return;
+        }
+        if (this.channel.isOpen()) {
+            try {
+                p_channelRead0_2_.processPacket(this.packetListener);
+            }
+            catch (ThreadQuickExitException ex) {}
+        }
+    }
 
 	/**
 	 * Sets the NetHandler for this NetworkManager, no checks are made if this
@@ -165,44 +180,42 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 		this.packetListener = handler;
 	}
 
-	public void sendPacket(Packet packetIn) {
-		EventSendPacket eventSendPacket = new EventSendPacket(packetIn);
-		eventSendPacket.call();
+	public void sendPacket(final Packet packetIn) {
+        final EventSendPacket sendPacket = new EventSendPacket(packetIn);
+        sendPacket.call();
+        if (sendPacket.isCancelled()) {
+            return;
+        }
+        if (this.isChannelOpen()) {
+            this.flushOutboundQueue();
+            this.dispatchPacket(packetIn, null);
+        }
+        else {
+            this.field_181680_j.writeLock().lock();
+            try {
+                this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener<? extends Future<? super Void>>[])null));
+            }
+            finally {
+                this.field_181680_j.writeLock().unlock();
+            }
+        }
+    }
 
-		if (eventSendPacket.isCancelled()) {
-			return;
-		}
-
-		if (this.isChannelOpen()) {
-			this.flushOutboundQueue();
-			this.dispatchPacket(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
-		} else {
-			this.field_181680_j.writeLock().lock();
-
-			try {
-				this.outboundPacketsQueue.add(
-						new NetworkManager.InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
-			} finally {
-				this.field_181680_j.writeLock().unlock();
-			}
-		}
-	}
-
-	public void sendPacketNoEvent(Packet packetIn) {
-		if (this.isChannelOpen()) {
-			this.flushOutboundQueue();
-			this.dispatchPacket(packetIn, (GenericFutureListener<? extends Future<? super Void>>[]) null);
-		} else {
-			this.field_181680_j.writeLock().lock();
-
-			try {
-				this.outboundPacketsQueue.add(
-						new NetworkManager.InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
-			} finally {
-				this.field_181680_j.writeLock().unlock();
-			}
-		}
-	}
+	public void sendPacketNoEvent(final Packet packetIn) {
+        if (this.isChannelOpen()) {
+            this.flushOutboundQueue();
+            this.dispatchPacket(packetIn, null);
+        }
+        else {
+            this.field_181680_j.writeLock().lock();
+            try {
+                this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener<? extends Future<? super Void>>[])null));
+            }
+            finally {
+                this.field_181680_j.writeLock().unlock();
+            }
+        }
+    }
 
 	public void sendPacket(Packet packetIn, GenericFutureListener<? extends Future<? super Void>> listener,
 			GenericFutureListener<? extends Future<? super Void>>... listeners) {

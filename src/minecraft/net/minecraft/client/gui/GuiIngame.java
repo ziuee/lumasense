@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import me.luma.client.core.registry.impl.ClientLoader;
 import me.luma.client.hud.notifications.NotificationManager;
 import me.luma.client.management.event.impl.Event2D;
+import me.luma.client.management.utils.animations.animation2.AnimationUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -369,6 +370,8 @@ public class GuiIngame extends Gui
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
     }
+    
+    double scalingAnim;
 
     protected void renderTooltip(ScaledResolution sr, float partialTicks)
     {
@@ -380,8 +383,13 @@ public class GuiIngame extends Gui
             int i = sr.getScaledWidth() / 2;
             float f = this.zLevel;
             this.zLevel = -90.0F;
-            this.drawTexturedModalRect(i - 91, sr.getScaledHeight() - 22, 0, 0, 182, 22);
-            this.drawTexturedModalRect(i - 91 - 1 + entityplayer.inventory.currentItem * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
+            if(mc.currentScreen instanceof GuiChat) {
+            	//this.drawTexturedModalRect(i - 91, sr.getScaledHeight() - 20, 0, 0, 182, 2200);
+            	//this.drawTexturedModalRect(i - 91 - 1 + entityplayer.inventory.currentItem * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
+            } else {
+            	this.drawTexturedModalRect(i - 91, sr.getScaledHeight() - 22, 0, 0, 182, 22);
+            	this.drawTexturedModalRect(i - 91 - 1 + entityplayer.inventory.currentItem * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
+            }
             this.zLevel = f;
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableBlend();
@@ -390,9 +398,17 @@ public class GuiIngame extends Gui
 
             for (int j = 0; j < 9; ++j)
             {
-                int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
-                int l = sr.getScaledHeight() - 16 - 3;
-                this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
+            	if(mc.currentScreen instanceof GuiChat) {
+            		int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
+            		int l = sr.getScaledHeight() - 31 - 3;
+            		this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
+            	} else {
+            		int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
+            		int l = sr.getScaledHeight() - 16 - 3;
+            		this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
+            	}
+                
+                //this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
             }
 
             RenderHelper.disableStandardItemLighting();

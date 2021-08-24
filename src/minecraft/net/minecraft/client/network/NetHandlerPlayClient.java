@@ -813,17 +813,13 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
     }
 
-    public void addToSendQueue(Packet p_147297_1_)
-    {
-    	EventSendPacket eventSendPacket = new EventSendPacket(p_147297_1_);
-    	eventSendPacket.call();
-    	if(!eventSendPacket.isCancelled()) {
-    		this.netManager.sendPacket(p_147297_1_);
-    	}
+    public void addToSendQueue(final Packet p_147297_1_) {
+        final EventSendPacket eventSendPacket = new EventSendPacket(p_147297_1_);
+        eventSendPacket.call();
+        this.netManager.sendPacket(p_147297_1_);
     }
-    
-    public void addToSendQueueNoEvent(Packet p_147297_1_)
-    {
+
+    public void addToSendQueueSilent(final Packet p_147297_1_) {
         this.netManager.sendPacket(p_147297_1_);
     }
 

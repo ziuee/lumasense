@@ -1,6 +1,9 @@
 package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
+
+import me.luma.client.management.utils.animations.animation2.AnimationUtils;
+
 import java.io.IOException;
 import java.util.List;
 import net.minecraft.network.play.client.C14PacketTabComplete;
@@ -298,9 +301,10 @@ public class GuiChat extends GuiScreen
     /**
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
+    
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+        drawRect(2, this.height - 14, this.width - 2, this.height + 5, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 

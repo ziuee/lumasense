@@ -39,7 +39,7 @@ public class Criticals extends Module {
             C02PacketUseEntity packet = (C02PacketUseEntity)
             event.getPacket();
             if(packet.getAction() == C02PacketUseEntity.Action.ATTACK) {
-                        mc.getNetHandler().addToSendQueueNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(
+                        mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(
                                 mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
             	//this.crit();
             }

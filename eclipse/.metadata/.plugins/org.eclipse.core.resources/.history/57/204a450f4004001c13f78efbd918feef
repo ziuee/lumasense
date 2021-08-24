@@ -1,0 +1,18 @@
+package net.minecraft.item;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.world.World;
+
+public class ItemArrow extends Item {
+	
+	public ItemArrow() {
+		this.setCreativeTab(CreativeTabs.tabCombat);
+	}
+
+	public EntityArrow tabCombat(World world, ItemStack is, EntityLivingBase entity) {
+		EntityArrow entitytippedarrow = new EntityArrow(world, entity, 1);
+		entitytippedarrow.setPotionEffect
+	}
+}

@@ -55,12 +55,8 @@ public class LongJump extends Module {
 	@EventTarget
 	public void onUpdate(EventPreMotionUpdate event) {
 		if(mc.thePlayer.hurtTime > 0 && canLongJump && !check) {
-			mc.thePlayer.motionY = 0.440; // 0.414 / 0.430 / 0.440 / hypixel working
-			double speed = (0.70330627 + MoveUtils.getSpeedEffect() * 4.2) - air / 25;
-			float x2 = 0.7f + MoveUtils.getSpeedEffect() * 0.45f;
-			air += x2;
-			//MoveUtils.doStrafe(speed);
-			MoveUtils.doStrafe((float) ((0.17330627) * 4.2)); // 0.17320627 hypixel working
+			mc.thePlayer.motionY = 0.438; // 0.414 / 0.430 / 0.440 / hypixel working
+			MoveUtils.doStrafe((float) ((0.17310627) * 4.2)); // 0.17320627 hypixel working
 			check = true;
 		}
 		
