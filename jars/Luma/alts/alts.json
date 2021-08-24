@@ -1,8 +1,8 @@
 {
   "lastalt": {
-    "email": "lordzerkal@gmail.com",
-    "password": "Wildchild1992",
-    "name": "Zerkal92",
+    "email": "oliviach85@gmail.com",
+    "password": "Shadow11!",
+    "name": "MarshmaLiv",
     "banned": false
   },
   "accounts": [
@@ -34,6 +34,12 @@
       "email": "lordzerkal@gmail.com",
       "password": "Wildchild1992",
       "name": "Zerkal92",
+      "banned": false
+    },
+    {
+      "email": "oliviach85@gmail.com",
+      "password": "Shadow11!",
+      "name": "MarshmaLiv",
       "banned": false
     }
   ]
